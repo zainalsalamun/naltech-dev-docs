@@ -1,0 +1,118 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  docs: CollectionEntry<"docs">[];
+  currentSlug?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const { docs, currentSlug, headings = [] } = Astro.props;
+
+const grouped = docs.reduce<Record<string, CollectionEntry<"docs">[]>>((acc, doc) => {
+  const category = doc.data.category;
+  acc[category] ??= [];
+  acc[category].push(doc);
+  return acc;
+}, {});
+
+for (const category of Object.keys(grouped)) {
+  grouped[category].sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
+}
+
+const headingGroups = headings
+  .filter((heading) => heading.depth === 2 || heading.depth === 3)
+  .reduce<{ slug: string; text: string; children: { slug: string; text: string }[] }[]>((groups, heading) => {
+    if (heading.depth === 2 || groups.length === 0) {
+      groups.push({ slug: heading.slug, text: heading.text, children: [] });
+      return groups;
+    }
+
+    groups[groups.length - 1].children.push({ slug: heading.slug, text: heading.text });
+    return groups;
+  }, []);
+---
+
+<aside class="docs-sidebar" id="docsSidebar">
+  <a class="brand" href="/">
+    <span class="brand-mark">
+      <img src="/assets/naltech-logo.png" alt="Naltech" />
+    </span>
+    <span>
+      <strong>Naltech Docs</strong>
+      <small>Catatan kerja & belajar</small>
+    </span>
+  </a>
+
+  <label class="search-box">
+    <span>Cari dokumentasi</span>
+    <input id="docsSearch" type="search" placeholder="flutter, laravel, api..." />
+  </label>
+
+  <nav class="docs-nav" id="docsNav">
+    {Object.entries(grouped).map(([category, entries]) => (
+      <details class="nav-group" open={entries.some((entry) => entry.slug === currentSlug)}>
+        <summary>{category}</summary>
+        {entries.map((entry) => (
+          entry.slug === currentSlug ? (
+            <details class="nav-doc active" open>
+              <summary>
+                <span>{entry.data.title}</span>
+                {entry.data.level && <small>{entry.data.level}</small>}
+              </summary>
+              <div class="nav-doc-body">
+                <a class="nav-overview" href={`/docs/${entry.slug}/`} data-title={`${entry.data.title} ringkasan`.toLowerCase()}>
+                  Ringkasan materi
+                </a>
+                {headingGroups.map((group, index) => (
+                  group.children.length > 0 ? (
+                    <details class="nav-chapter" open={index === 0}>
+                      <summary>{group.text}</summary>
+                      <div class="nav-children">
+                        <a href={`#${group.slug}`} data-title={group.text.toLowerCase()}>Buka bagian</a>
+                        {group.children.map((child) => (
+                          <a href={`#${child.slug}`} data-title={child.text.toLowerCase()}>{child.text}</a>
+                        ))}
+                      </div>
+                    </details>
+                  ) : (
+                    <a class="nav-chapter-link" href={`#${group.slug}`} data-title={group.text.toLowerCase()}>
+                      {group.text}
+                    </a>
+                  )
+                ))}
+              </div>
+            </details>
+          ) : (
+            <a
+              href={`/docs/${entry.slug}/`}
+              class="nav-doc-link"
+              data-title={`${entry.data.title} ${entry.data.tags.join(" ")}`.toLowerCase()}
+            >
+              <span>{entry.data.title}</span>
+              {entry.data.level && <small>{entry.data.level}</small>}
+            </a>
+          )
+        ))}
+      </details>
+    ))}
+  </nav>
+</aside>
+
+<script>
+  const search = document.getElementById("docsSearch");
+  const links = [...document.querySelectorAll("[data-title]")];
+  const groups = [...document.querySelectorAll(".nav-group")];
+
+  search?.addEventListener("input", () => {
+    const term = search.value.trim().toLowerCase();
+    links.forEach((link) => {
+      link.classList.toggle("is-hidden", Boolean(term) && !link.dataset.title.includes(term));
+    });
+    groups.forEach((group) => {
+      const visible = [...group.querySelectorAll("[data-title]")].some((link) => !link.classList.contains("is-hidden"));
+      group.classList.toggle("is-hidden", Boolean(term) && !visible);
+      if (term && visible) group.open = true;
+    });
+  });
+</script>

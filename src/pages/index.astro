@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const docs = (await getCollection("docs")).sort(
+  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+);
+const categories = [...new Set(docs.map((doc) => doc.data.category))];
+---
+
+<BaseLayout
+  title="Personal Developer Docs"
+  description="Knowledge base pribadi untuk dokumentasi project, tutorial, snippet, dan catatan troubleshooting."
+>
+  <main class="home">
+    <section class="home-hero">
+      <p class="eyebrow">Personal developer knowledge base</p>
+      <h1>Satu tempat untuk menyimpan semua hal yang pernah kamu kerjakan.</h1>
+      <p>
+        Mulai dari Flutter, nanti bisa berkembang ke Laravel, React, database, deployment,
+        troubleshooting, snippet kode, sampai dokumentasi project pribadi.
+      </p>
+      <div class="home-actions">
+        <a class="primary-action" href={`/docs/${docs[0]?.slug}/`}>Buka dokumentasi</a>
+        <a class="secondary-action" href="#kategori">Lihat kategori</a>
+      </div>
+    </section>
+
+    <section class="home-grid" id="kategori">
+      {categories.map((category) => {
+        const entries = docs.filter((doc) => doc.data.category === category);
+        return (
+          <article class="category-card">
+            <span>{entries.length} materi</span>
+            <h2>{category}</h2>
+            <p>{entries[0]?.data.description}</p>
+            <a href={`/docs/${entries[0]?.slug}/`}>Masuk kategori</a>
+          </article>
+        );
+      })}
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,63 @@
+---
+import { getCollection, render } from "astro:content";
+import DocsLayout from "../../layouts/DocsLayout.astro";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  return docs.map((doc) => ({
+    params: { slug: doc.slug },
+    props: { doc },
+  }));
+}
+
+const { doc } = Astro.props;
+const docs = (await getCollection("docs")).sort(
+  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+);
+const { Content, headings } = await render(doc);
+const currentIndex = docs.findIndex((entry) => entry.slug === doc.slug);
+const previous = docs[currentIndex - 1];
+const next = docs[currentIndex + 1];
+const totalDocs = docs.length;
+const progressLabel = `${currentIndex + 1} dari ${totalDocs} materi`;
+---
+
+<DocsLayout
+  title={doc.data.title}
+  description={doc.data.description}
+  docs={docs}
+  currentSlug={doc.slug}
+  headings={headings}
+>
+  <article class="doc-article">
+    <header class="doc-header">
+      <p class="eyebrow">{doc.data.category}</p>
+      <h1>{doc.data.title}</h1>
+      <p>{doc.data.description}</p>
+      <div class="tag-row">
+        <span>{progressLabel}</span>
+        {doc.data.level && <span>{doc.data.level}</span>}
+        {doc.data.tags.map((tag) => <span>{tag}</span>)}
+      </div>
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <nav class="doc-pager">
+      {previous ? (
+        <a href={`/docs/${previous.slug}/`}>
+          <small>Sebelumnya</small>
+          <strong>← {previous.data.title}</strong>
+        </a>
+      ) : <span />}
+      {next ? (
+        <a href={`/docs/${next.slug}/`}>
+          <small>Selanjutnya</small>
+          <strong>{next.data.title} →</strong>
+        </a>
+      ) : <span />}
+    </nav>
+  </article>
+</DocsLayout>

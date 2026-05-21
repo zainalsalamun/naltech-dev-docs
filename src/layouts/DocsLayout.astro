@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import Sidebar from "../components/Sidebar.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  docs: CollectionEntry<"docs">[];
+  currentSlug?: string;
+  headings?: { depth: number; slug: string; text: string }[];
+}
+
+const { title, description, docs, currentSlug, headings = [] } = Astro.props;
+---
+
+<BaseLayout title={`${title} | Dev Docs`} description={description}>
+  <div class="docs-shell">
+    <Sidebar docs={docs} currentSlug={currentSlug} headings={headings} />
+    <main class="docs-main">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>

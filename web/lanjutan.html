@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tutorial Flutter Lanjutan</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="top-progress" id="topProgress"></div>
+  <button class="menu-toggle" id="menuToggle" aria-label="Buka daftar isi">☰</button>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <span class="brand-mark">F</span>
+      <div>
+        <strong>Flutter Lanjutan</strong>
+        <small>Modul naik level</small>
+      </div>
+    </div>
+    <label class="search-box">
+      <span>Cari materi</span>
+      <input id="searchInput" type="search" placeholder="repository, state, testing...">
+    </label>
+    <nav class="toc" id="toc">
+      <a href="index.html">← Materi Dasar</a>
+      <a href="#daftar-isi" data-section="daftar-isi">Daftar Isi</a>
+<a href="#1-kapan-harus-naik-dari-dasar-ke-lanjutan" data-section="1-kapan-harus-naik-dari-dasar-ke-lanjutan">1. Kapan Harus Naik dari Dasar ke Lanjutan</a>
+<a href="#2-mindset-aplikasi-flutter-yang-rapi" data-section="2-mindset-aplikasi-flutter-yang-rapi">2. Mindset Aplikasi Flutter yang Rapi</a>
+<a href="#3-struktur-folder-yang-lebih-scalable" data-section="3-struktur-folder-yang-lebih-scalable">3. Struktur Folder yang Lebih Scalable</a>
+<a href="#4-memisahkan-widget-menjadi-komponen-kecil" data-section="4-memisahkan-widget-menjadi-komponen-kecil">4. Memisahkan Widget Menjadi Komponen Kecil</a>
+<a href="#5-model-data-dan-json-parsing-yang-lebih-aman" data-section="5-model-data-dan-json-parsing-yang-lebih-aman">5. Model Data dan JSON Parsing yang Lebih Aman</a>
+<a href="#6-service-dan-repository" data-section="6-service-dan-repository">6. Service dan Repository</a>
+<a href="#7-loading-empty-error-dan-success-state" data-section="7-loading-empty-error-dan-success-state">7. Loading, Empty, Error, dan Success State</a>
+<a href="#8-state-management-dari-setstate-ke-pola-yang-lebih-rapi" data-section="8-state-management-dari-setstate-ke-pola-yang-lebih-rapi">8. State Management: Dari setState ke Pola yang Lebih Rapi</a>
+<a href="#9-form-lanjutan-dan-validasi" data-section="9-form-lanjutan-dan-validasi">9. Form Lanjutan dan Validasi</a>
+<a href="#10-navigasi-dengan-named-routes" data-section="10-navigasi-dengan-named-routes">10. Navigasi dengan Named Routes</a>
+<a href="#11-local-storage-dan-cache-sederhana" data-section="11-local-storage-dan-cache-sederhana">11. Local Storage dan Cache Sederhana</a>
+<a href="#12-api-crud-sederhana" data-section="12-api-crud-sederhana">12. API CRUD Sederhana</a>
+<a href="#13-theme-dark-mode-dan-design-system-kecil" data-section="13-theme-dark-mode-dan-design-system-kecil">13. Theme, Dark Mode, dan Design System Kecil</a>
+<a href="#14-error-handling-yang-enak-untuk-user" data-section="14-error-handling-yang-enak-untuk-user">14. Error Handling yang Enak untuk User</a>
+<a href="#15-testing-dasar" data-section="15-testing-dasar">15. Testing Dasar</a>
+<a href="#16-build-dan-persiapan-publish" data-section="16-build-dan-persiapan-publish">16. Build dan Persiapan Publish</a>
+<a href="#17-mini-project-lanjutan-task-manager" data-section="17-mini-project-lanjutan-task-manager">17. Mini Project Lanjutan: Task Manager</a>
+<a href="#18-roadmap-setelah-materi-ini" data-section="18-roadmap-setelah-materi-ini">18. Roadmap Setelah Materi Ini</a>
+<a href="#checklist-penguasaan-lanjutan" data-section="checklist-penguasaan-lanjutan">Checklist Penguasaan Lanjutan</a>
+<a href="#penutup" data-section="penutup">Penutup</a>
+    </nav>
+  </aside>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Next level Flutter engineering</p>
+        <h1>Tutorial Flutter Lanjutan</h1>
+        <p class="lead">Lanjutkan dari widget dan state sederhana menuju project yang lebih rapi: arsitektur folder, repository, state management, CRUD, local storage, testing, dan persiapan publish.</p>
+        <div class="hero-actions">
+          <a class="primary-action" href="#1-kapan-harus-naik-dari-dasar-ke-lanjutan">Mulai materi lanjutan</a>
+          <a class="secondary-action" href="index.html">Kembali ke dasar</a>
+        </div>
+        <div class="stats">
+          <div><strong>21</strong><span>bagian lanjutan</span></div>
+          <div><strong>1</strong><span>mini project baru</span></div>
+          <div><strong>CRUD</strong><span>target praktik</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="workspace-card">
+          <div class="window-bar">
+            <span></span><span></span><span></span>
+            <em>task_manager_architecture.dart</em>
+          </div>
+          <div class="code-grid">
+            <div class="code-pane">
+              <b>feature/tasks</b>
+              <i>models/task.dart</i>
+              <i>data/repository.dart</i>
+              <i>pages/task_list.dart</i>
+              <i>widgets/task_card.dart</i>
+            </div>
+            <div class="ai-pane">
+              <span>AI mentor</span>
+              <strong>Upgrade</strong>
+              <p>Move from screens to scalable app structure.</p>
+            </div>
+          </div>
+          <div class="signal-row">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </header>
+    <article class="content" id="content">
+      <p>Materi ini adalah kelanjutan dari <strong>Tutorial Flutter Dasar untuk Pemula</strong>. Jika materi dasar fokus pada widget, layout, state sederhana, navigasi, form, list, API, dan mini project, maka materi lanjutan ini fokus pada cara membuat project Flutter yang lebih rapi, mudah dirawat, dan lebih dekat ke kebutuhan aplikasi nyata.</p>
+<p>Target belajar:</p>
+<ul>
+<li>Memahami struktur folder yang lebih scalable.</li>
+<li>Memisahkan UI, model, service, repository, dan state.</li>
+<li>Mengelola loading, success, empty, dan error state.</li>
+<li>Memahami state management dasar dengan <code>ValueNotifier</code>, Provider, atau Riverpod secara konseptual.</li>
+<li>Membuat alur API yang lebih rapi.</li>
+<li>Menyimpan data lokal dengan pola yang aman.</li>
+<li>Menambahkan validasi form yang lebih baik.</li>
+<li>Mengenal testing, build, dan publish.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="daftar-isi">
+<h2>Daftar Isi</h2>
+<ol>
+<li>Kapan Harus Naik dari Dasar ke Lanjutan</li>
+<li>Mindset Aplikasi Flutter yang Rapi</li>
+<li>Struktur Folder yang Lebih Scalable</li>
+<li>Memisahkan Widget Menjadi Komponen Kecil</li>
+<li>Model Data dan JSON Parsing yang Lebih Aman</li>
+<li>Service dan Repository</li>
+<li>Loading, Empty, Error, dan Success State</li>
+<li>State Management: Dari setState ke Pola yang Lebih Rapi</li>
+<li>Form Lanjutan dan Validasi</li>
+<li>Navigasi dengan Named Routes</li>
+<li>Local Storage dan Cache Sederhana</li>
+<li>API CRUD Sederhana</li>
+<li>Theme, Dark Mode, dan Design System Kecil</li>
+<li>Error Handling yang Enak untuk User</li>
+<li>Testing Dasar</li>
+<li>Build dan Persiapan Publish</li>
+<li>Mini Project Lanjutan: Task Manager</li>
+<li>Roadmap Setelah Materi Ini</li>
+</ol>
+<hr class="section-rule">
+<section class="lesson-section" id="1-kapan-harus-naik-dari-dasar-ke-lanjutan">
+<h2>1. Kapan Harus Naik dari Dasar ke Lanjutan</h2>
+<p>Kamu siap masuk materi lanjutan jika sudah bisa:</p>
+<ul>
+<li>Membuat project Flutter baru.</li>
+<li>Membuat <code>StatelessWidget</code> dan <code>StatefulWidget</code>.</li>
+<li>Menggunakan <code>setState</code>.</li>
+<li>Membuat layout dengan <code>Column</code>, <code>Row</code>, <code>Container</code>, <code>Padding</code>, dan <code>Expanded</code>.</li>
+<li>Membaca input dari <code>TextField</code>.</li>
+<li>Menampilkan list dengan <code>ListView.builder</code>.</li>
+<li>Membuka halaman baru dengan <code>Navigator.push</code>.</li>
+<li>Mengambil data API sederhana dengan <code>FutureBuilder</code>.</li>
+</ul>
+<p>Tanda kamu mulai butuh pola lanjutan:</p>
+<ul>
+<li>File <code>main.dart</code> sudah terlalu panjang.</li>
+<li>Banyak kode UI berulang.</li>
+<li>Bingung menaruh function API di mana.</li>
+<li>State mulai tersebar di banyak halaman.</li>
+<li>Error API tidak ditangani dengan konsisten.</li>
+<li>Sulit menambah fitur tanpa merusak fitur lama.</li>
+</ul>
+<p>Tujuan materi lanjutan bukan membuat aplikasi menjadi rumit. Tujuannya adalah membuat aplikasi tetap mudah dipahami saat fitur bertambah.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="2-mindset-aplikasi-flutter-yang-rapi">
+<h2>2. Mindset Aplikasi Flutter yang Rapi</h2>
+<p>Aplikasi Flutter yang rapi biasanya punya pemisahan tanggung jawab:</p>
+<ul>
+<li>UI menampilkan data dan menerima interaksi user.</li>
+<li>State menyimpan kondisi layar.</li>
+<li>Model mendefinisikan bentuk data.</li>
+<li>Service berbicara dengan API, database, atau plugin.</li>
+<li>Repository menjadi jembatan antara UI/state dan sumber data.</li>
+</ul>
+<p>Pola sederhana:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>Page -&gt; State/Controller -&gt; Repository -&gt; Service/API
+                  |
+                Model</code></pre></div>
+<p>Penjelasan:</p>
+<ul>
+<li><code>Page</code> fokus pada tampilan.</li>
+<li><code>State/Controller</code> fokus pada perubahan kondisi.</li>
+<li><code>Repository</code> fokus pada aturan ambil/simpan data.</li>
+<li><code>Service/API</code> fokus pada detail teknis request.</li>
+<li><code>Model</code> fokus pada bentuk data.</li>
+</ul>
+<p>Saat baru belajar, kamu tidak harus memakai arsitektur besar. Cukup biasakan memisahkan kode sesuai tanggung jawab.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="3-struktur-folder-yang-lebih-scalable">
+<h2>3. Struktur Folder yang Lebih Scalable</h2>
+<p>Struktur sederhana untuk project menengah:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>lib/
+  main.dart
+  app.dart
+  core/
+    constants/
+    theme/
+    utils/
+  features/
+    tasks/
+      data/
+        task_repository.dart
+        task_service.dart
+      models/
+        task.dart
+      pages/
+        task_list_page.dart
+        task_form_page.dart
+      widgets/
+        task_card.dart
+  shared/
+    widgets/</code></pre></div>
+<p>Kapan memakai folder <code>features</code>?</p>
+<ul>
+<li>Saat aplikasi punya beberapa fitur besar.</li>
+<li>Misalnya <code>auth</code>, <code>tasks</code>, <code>profile</code>, <code>settings</code>, <code>products</code>, <code>orders</code>.</li>
+</ul>
+<p>Kapan memakai folder <code>shared</code>?</p>
+<ul>
+<li>Untuk komponen yang dipakai banyak fitur.</li>
+<li>Misalnya button, empty state, loading view, app text field.</li>
+</ul>
+<p>Contoh pembagian sederhana:</p>
+<ul>
+<li><code>models/</code>: class data.</li>
+<li><code>pages/</code>: halaman penuh.</li>
+<li><code>widgets/</code>: komponen kecil.</li>
+<li><code>data/</code>: repository dan service.</li>
+<li><code>core/</code>: konfigurasi umum.</li>
+</ul>
+<p>Tips:</p>
+<ul>
+<li>Jangan terlalu cepat membuat banyak folder kosong.</li>
+<li>Tambahkan struktur saat mulai ada kebutuhan.</li>
+<li>Hindari semua kode menumpuk di <code>main.dart</code>.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="4-memisahkan-widget-menjadi-komponen-kecil">
+<h2>4. Memisahkan Widget Menjadi Komponen Kecil</h2>
+<p>Jika satu halaman sudah terlalu panjang, pecah menjadi widget kecil.</p>
+<p>Sebelum dipisah:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>Card(
+  child: ListTile(
+    title: Text(task.title),
+    subtitle: Text(task.description),
+    trailing: IconButton(
+      icon: const Icon(Icons.delete_outline),
+      onPressed: onDelete,
+    ),
+  ),
+)</code></pre></div>
+<p>Setelah dipisah:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class TaskCard extends StatelessWidget {
+  final Task task;
+  final VoidCallback onDelete;
+
+  const TaskCard({
+    super.key,
+    required this.task,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(task.title),
+        subtitle: Text(task.description),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete_outline),
+          onPressed: onDelete,
+        ),
+      ),
+    );
+  }
+}</code></pre></div>
+<p>Manfaat:</p>
+<ul>
+<li>Halaman lebih pendek.</li>
+<li>Komponen bisa dipakai ulang.</li>
+<li>Lebih mudah dites.</li>
+<li>Lebih mudah dibaca oleh developer lain.</li>
+</ul>
+<p>Aturan praktis:</p>
+<ul>
+<li>Jika widget punya nama yang jelas, pisahkan.</li>
+<li>Jika widget dipakai lebih dari sekali, pisahkan.</li>
+<li>Jika method <code>build()</code> terlalu panjang, pisahkan.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="5-model-data-dan-json-parsing-yang-lebih-aman">
+<h2>5. Model Data dan JSON Parsing yang Lebih Aman</h2>
+<p>Model membantu aplikasi memahami bentuk data.</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class Task {
+  final int id;
+  final String title;
+  final String description;
+  final bool isDone;
+
+  const Task({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.isDone,
+  });
+
+  factory Task.fromJson(Map&lt;String, dynamic&gt; json) {
+    return Task(
+      id: json[&#x27;id&#x27;] as int,
+      title: json[&#x27;title&#x27;] as String? ?? &#x27;&#x27;,
+      description: json[&#x27;description&#x27;] as String? ?? &#x27;&#x27;,
+      isDone: json[&#x27;isDone&#x27;] as bool? ?? false,
+    );
+  }
+
+  Map&lt;String, dynamic&gt; toJson() {
+    return {
+      &#x27;id&#x27;: id,
+      &#x27;title&#x27;: title,
+      &#x27;description&#x27;: description,
+      &#x27;isDone&#x27;: isDone,
+    };
+  }
+}</code></pre></div>
+<p>Kenapa <code>as String? ?? &#x27;&#x27;</code> lebih aman?</p>
+<ul>
+<li>API kadang mengirim nilai kosong.</li>
+<li>Field bisa hilang.</li>
+<li>Aplikasi tidak langsung crash saat data kurang lengkap.</li>
+</ul>
+<p>Namun jangan diam-diam mengabaikan semua error. Untuk aplikasi produksi, tetap log error dan validasi data penting.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="6-service-dan-repository">
+<h2>6. Service dan Repository</h2>
+<p>Service fokus pada detail teknis. Repository fokus pada kebutuhan aplikasi.</p>
+<p>Contoh service:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class TaskService {
+  Future&lt;List&lt;Map&lt;String, dynamic&gt;&gt;&gt; fetchTasks() async {
+    // Request API dilakukan di sini.
+    return [];
+  }
+}</code></pre></div>
+<p>Contoh repository:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class TaskRepository {
+  final TaskService service;
+
+  TaskRepository(this.service);
+
+  Future&lt;List&lt;Task&gt;&gt; getTasks() async {
+    final jsonList = await service.fetchTasks();
+    return jsonList.map(Task.fromJson).toList();
+  }
+}</code></pre></div>
+<p>Manfaat repository:</p>
+<ul>
+<li>UI tidak perlu tahu detail API.</li>
+<li>Kalau sumber data berubah, UI tidak perlu banyak berubah.</li>
+<li>Lebih mudah membuat mock data untuk testing.</li>
+</ul>
+<p>Pola pemanggilan:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>Page meminta data -&gt; Repository mengambil data -&gt; Service request API</code></pre></div>
+<hr class="section-rule">
+<section class="lesson-section" id="7-loading-empty-error-dan-success-state">
+<h2>7. Loading, Empty, Error, dan Success State</h2>
+<p>Aplikasi yang baik tidak hanya menampilkan data. Ia juga harus menjelaskan kondisi layar.</p>
+<p>Empat state umum:</p>
+<ul>
+<li>Loading: data sedang diambil.</li>
+<li>Empty: data berhasil diambil, tetapi kosong.</li>
+<li>Error: data gagal diambil.</li>
+<li>Success: data berhasil ditampilkan.</li>
+</ul>
+<p>Contoh enum:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>enum ViewStatus {
+  initial,
+  loading,
+  success,
+  empty,
+  error,
+}</code></pre></div>
+<p>Contoh pemakaian:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>Widget buildBody() {
+  switch (status) {
+    case ViewStatus.loading:
+      return const Center(child: CircularProgressIndicator());
+    case ViewStatus.empty:
+      return const Center(child: Text(&#x27;Belum ada data&#x27;));
+    case ViewStatus.error:
+      return Center(
+        child: ElevatedButton(
+          onPressed: fetchData,
+          child: const Text(&#x27;Coba Lagi&#x27;),
+        ),
+      );
+    case ViewStatus.success:
+      return TaskList(tasks: tasks);
+    case ViewStatus.initial:
+      return const SizedBox.shrink();
+  }
+}</code></pre></div>
+<p>Ini membuat UI lebih jelas dan mudah dirawat.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="8-state-management-dari-setstate-ke-pola-yang-lebih-rapi">
+<h2>8. State Management: Dari setState ke Pola yang Lebih Rapi</h2>
+<p><code>setState</code> cukup untuk:</p>
+<ul>
+<li>Counter.</li>
+<li>Form sederhana.</li>
+<li>Toggle kecil.</li>
+<li>Halaman dengan state lokal.</li>
+</ul>
+<p>Namun saat state dipakai banyak widget atau halaman, gunakan pola yang lebih rapi.</p>
+<p>Pilihan bertahap:</p>
+<ol>
+<li><code>setState</code></li>
+<li><code>ValueNotifier</code></li>
+<li>Provider</li>
+<li>Riverpod</li>
+<li>Bloc/Cubit</li>
+</ol>
+<h3 id="valuenotifier">ValueNotifier</h3>
+<p><code>ValueNotifier</code> cocok untuk state sederhana yang ingin dipisahkan dari widget.</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>final counter = ValueNotifier&lt;int&gt;(0);
+
+ValueListenableBuilder&lt;int&gt;(
+  valueListenable: counter,
+  builder: (context, value, child) {
+    return Text(&#x27;Nilai: $value&#x27;);
+  },
+)</code></pre></div>
+<p>Ubah nilai:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>counter.value++;</code></pre></div>
+<h3 id="provider-atau-riverpod">Provider atau Riverpod</h3>
+<p>Provider dan Riverpod membantu membagikan state ke banyak widget.</p>
+<p>Contoh konsep:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>Widget membaca state -&gt; Controller mengubah state -&gt; UI otomatis update</code></pre></div>
+<p>Untuk pemula, pahami dulu:</p>
+<ul>
+<li>Apa data yang berubah?</li>
+<li>Siapa yang boleh mengubah data itu?</li>
+<li>Widget mana yang perlu membaca data?</li>
+</ul>
+<p>Jangan memilih library hanya karena populer. Pilih saat masalahnya memang butuh.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="9-form-lanjutan-dan-validasi">
+<h2>9. Form Lanjutan dan Validasi</h2>
+<p>Untuk form yang lebih serius, gunakan <code>Form</code> dan <code>TextFormField</code>.</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class TaskFormPage extends StatefulWidget {
+  const TaskFormPage({super.key});
+
+  @override
+  State&lt;TaskFormPage&gt; createState() =&gt; _TaskFormPageState();
+}
+
+class _TaskFormPageState extends State&lt;TaskFormPage&gt; {
+  final formKey = GlobalKey&lt;FormState&gt;();
+  final titleController = TextEditingController();
+
+  @override
+  void dispose() {
+    titleController.dispose();
+    super.dispose();
+  }
+
+  void save() {
+    if (!formKey.currentState!.validate()) return;
+
+    final title = titleController.text.trim();
+    Navigator.pop(context, title);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            controller: titleController,
+            decoration: const InputDecoration(labelText: &#x27;Judul&#x27;),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return &#x27;Judul wajib diisi&#x27;;
+              }
+              if (value.trim().length &lt; 3) {
+                return &#x27;Judul minimal 3 karakter&#x27;;
+              }
+              return null;
+            },
+          ),
+          ElevatedButton(
+            onPressed: save,
+            child: const Text(&#x27;Simpan&#x27;),
+          ),
+        ],
+      ),
+    );
+  }
+}</code></pre></div>
+<p>Form yang baik:</p>
+<ul>
+<li>Memberi pesan error yang jelas.</li>
+<li>Tidak membuat user menebak.</li>
+<li>Mencegah submit saat data belum valid.</li>
+<li>Membersihkan controller dengan <code>dispose</code>.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="10-navigasi-dengan-named-routes">
+<h2>10. Navigasi dengan Named Routes</h2>
+<p>Untuk aplikasi kecil, <code>MaterialPageRoute</code> sudah cukup. Untuk aplikasi yang mulai punya banyak halaman, named routes bisa membantu.</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class AppRoutes {
+  static const home = &#x27;/&#x27;;
+  static const taskForm = &#x27;/task-form&#x27;;
+  static const settings = &#x27;/settings&#x27;;
+}</code></pre></div>
+<p>Di <code>MaterialApp</code>:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>MaterialApp(
+  initialRoute: AppRoutes.home,
+  routes: {
+    AppRoutes.home: (context) =&gt; const TaskListPage(),
+    AppRoutes.taskForm: (context) =&gt; const TaskFormPage(),
+    AppRoutes.settings: (context) =&gt; const SettingsPage(),
+  },
+)</code></pre></div>
+<p>Membuka halaman:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>Navigator.pushNamed(context, AppRoutes.taskForm);</code></pre></div>
+<p>Kelebihan:</p>
+<ul>
+<li>Nama route lebih konsisten.</li>
+<li>Navigasi lebih mudah dilacak.</li>
+<li>Cocok untuk project yang mulai banyak halaman.</li>
+</ul>
+<p>Untuk aplikasi besar, kamu bisa belajar router package seperti <code>go_router</code>.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="11-local-storage-dan-cache-sederhana">
+<h2>11. Local Storage dan Cache Sederhana</h2>
+<p>Local storage dipakai untuk menyimpan data di device.</p>
+<p>Contoh kebutuhan:</p>
+<ul>
+<li>Status login.</li>
+<li>Preferensi theme.</li>
+<li>Data cache kecil.</li>
+<li>Draft form.</li>
+</ul>
+<p>Gunakan penyimpanan sesuai kebutuhan:</p>
+<ul>
+<li><code>shared_preferences</code>: data kecil dan sederhana.</li>
+<li>secure storage: data sensitif seperti token.</li>
+<li>SQLite/Hive/Isar: data lokal yang lebih kompleks.</li>
+</ul>
+<p>Contoh cache sederhana:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class SettingsRepository {
+  Future&lt;void&gt; saveDarkMode(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(&#x27;dark_mode&#x27;, value);
+  }
+
+  Future&lt;bool&gt; getDarkMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(&#x27;dark_mode&#x27;) ?? false;
+  }
+}</code></pre></div>
+<p>Catatan penting:</p>
+<ul>
+<li>Jangan simpan password langsung.</li>
+<li>Jangan menganggap cache selalu benar.</li>
+<li>Tetap siapkan fallback jika data lokal rusak atau kosong.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="12-api-crud-sederhana">
+<h2>12. API CRUD Sederhana</h2>
+<p>CRUD adalah:</p>
+<ul>
+<li>Create: membuat data.</li>
+<li>Read: membaca data.</li>
+<li>Update: mengubah data.</li>
+<li>Delete: menghapus data.</li>
+</ul>
+<p>Contoh kontrak repository:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>abstract class TaskRepository {
+  Future&lt;List&lt;Task&gt;&gt; getTasks();
+  Future&lt;Task&gt; createTask(Task task);
+  Future&lt;Task&gt; updateTask(Task task);
+  Future&lt;void&gt; deleteTask(int id);
+}</code></pre></div>
+<p>Kenapa membuat kontrak seperti ini?</p>
+<ul>
+<li>Lebih jelas fitur data yang tersedia.</li>
+<li>Mudah membuat versi fake untuk testing.</li>
+<li>UI tidak bergantung langsung pada API.</li>
+</ul>
+<p>Contoh alur create:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>User isi form -&gt; validasi -&gt; repository.createTask -&gt; API POST -&gt; refresh list</code></pre></div>
+<p>Contoh alur delete:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>User tap delete -&gt; konfirmasi -&gt; repository.deleteTask -&gt; API DELETE -&gt; hapus dari list</code></pre></div>
+<p>Selalu tangani:</p>
+<ul>
+<li>Loading saat request berjalan.</li>
+<li>Error saat gagal.</li>
+<li>Empty state setelah data kosong.</li>
+<li>Feedback sukses seperti SnackBar.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="13-theme-dark-mode-dan-design-system-kecil">
+<h2>13. Theme, Dark Mode, dan Design System Kecil</h2>
+<p>Design system kecil membantu UI tetap konsisten.</p>
+<p>Contoh file warna:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class AppColors {
+  static const primary = Color(0xFF02569B);
+  static const success = Color(0xFF22C55E);
+  static const danger = Color(0xFFEF4444);
+}</code></pre></div>
+<p>Contoh theme:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>ThemeData lightTheme() {
+  return ThemeData(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
+    ),
+    useMaterial3: true,
+    inputDecorationTheme: const InputDecorationTheme(
+      border: OutlineInputBorder(),
+    ),
+  );
+}</code></pre></div>
+<p>Untuk dark mode:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>MaterialApp(
+  theme: lightTheme(),
+  darkTheme: darkTheme(),
+  themeMode: ThemeMode.system,
+)</code></pre></div>
+<p>Tips:</p>
+<ul>
+<li>Simpan warna utama di satu tempat.</li>
+<li>Buat style button dan input konsisten.</li>
+<li>Hindari warna hardcode bertebaran di banyak widget.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="14-error-handling-yang-enak-untuk-user">
+<h2>14. Error Handling yang Enak untuk User</h2>
+<p>Error tidak boleh hanya muncul di console.</p>
+<p>Contoh error buruk:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>Exception: failed request</code></pre></div>
+<p>Contoh error yang lebih ramah:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>Gagal mengambil data. Periksa koneksi internet lalu coba lagi.</code></pre></div>
+<p>Buat mapper error:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>String mapErrorMessage(Object error) {
+  final message = error.toString();
+
+  if (message.contains(&#x27;SocketException&#x27;)) {
+    return &#x27;Tidak ada koneksi internet&#x27;;
+  }
+
+  if (message.contains(&#x27;timeout&#x27;)) {
+    return &#x27;Request terlalu lama. Coba lagi nanti&#x27;;
+  }
+
+  return &#x27;Terjadi kesalahan. Silakan coba lagi&#x27;;
+}</code></pre></div>
+<p>UI error yang baik biasanya punya:</p>
+<ul>
+<li>Pesan singkat.</li>
+<li>Tombol coba lagi.</li>
+<li>Tidak menyalahkan user.</li>
+<li>Tidak menampilkan stack trace.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="15-testing-dasar">
+<h2>15. Testing Dasar</h2>
+<p>Testing membantu memastikan fitur tetap berjalan setelah kode berubah.</p>
+<p>Jenis test:</p>
+<ul>
+<li>Unit test: mengetes function atau class kecil.</li>
+<li>Widget test: mengetes tampilan widget.</li>
+<li>Integration test: mengetes alur aplikasi.</li>
+</ul>
+<p>Contoh unit test sederhana:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>bool isValidTitle(String value) {
+  return value.trim().length &gt;= 3;
+}</code></pre></div>
+<p>Test:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>void main() {
+  test(&#x27;title minimal 3 karakter&#x27;, () {
+    expect(isValidTitle(&#x27;ab&#x27;), false);
+    expect(isValidTitle(&#x27;abc&#x27;), true);
+  });
+}</code></pre></div>
+<p>Jalankan:</p>
+<div class="code-card"><div class="code-label">bash</div><pre><code>flutter test</code></pre></div>
+<p>Mulai dari test kecil:</p>
+<ul>
+<li>Validator form.</li>
+<li>JSON parsing model.</li>
+<li>Repository fake.</li>
+<li>Widget empty state.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="16-build-dan-persiapan-publish">
+<h2>16. Build dan Persiapan Publish</h2>
+<p>Sebelum publish, cek:</p>
+<ul>
+<li>App name.</li>
+<li>App icon.</li>
+<li>Splash screen.</li>
+<li>Version number.</li>
+<li>Permission Android/iOS.</li>
+<li>Internet permission jika memakai API.</li>
+<li>Build release.</li>
+</ul>
+<p>Build Android APK:</p>
+<div class="code-card"><div class="code-label">bash</div><pre><code>flutter build apk --release</code></pre></div>
+<p>Build Android App Bundle:</p>
+<div class="code-card"><div class="code-label">bash</div><pre><code>flutter build appbundle --release</code></pre></div>
+<p>Build iOS:</p>
+<div class="code-card"><div class="code-label">bash</div><pre><code>flutter build ios --release</code></pre></div>
+<p>Checklist sebelum rilis:</p>
+<ul>
+<li>Tidak ada debug banner.</li>
+<li>Tidak ada print sensitif.</li>
+<li>Error state sudah ramah.</li>
+<li>Loading state jelas.</li>
+<li>Aplikasi dites di device fisik.</li>
+<li>Form tidak bisa submit data kosong.</li>
+<li>App icon dan nama sudah benar.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="17-mini-project-lanjutan-task-manager">
+<h2>17. Mini Project Lanjutan: Task Manager</h2>
+<p>Setelah aplikasi catatan belajar, buat project lanjutan: <strong>Task Manager</strong>.</p>
+<p>Fitur utama:</p>
+<ul>
+<li>Menampilkan daftar task.</li>
+<li>Menambahkan task.</li>
+<li>Mengedit task.</li>
+<li>Menghapus task.</li>
+<li>Menandai task selesai.</li>
+<li>Filter task: semua, aktif, selesai.</li>
+<li>Simpan data lokal.</li>
+<li>Empty state.</li>
+<li>Error state.</li>
+<li>Theme sederhana.</li>
+</ul>
+<p>Struktur fitur:</p>
+<div class="code-card"><div class="code-label">text</div><pre><code>features/tasks/
+  models/task.dart
+  data/task_repository.dart
+  pages/task_list_page.dart
+  pages/task_form_page.dart
+  widgets/task_card.dart
+  widgets/task_filter_bar.dart</code></pre></div>
+<p>Tahap pengerjaan:</p>
+<ol>
+<li>Buat model <code>Task</code>.</li>
+<li>Buat halaman list task.</li>
+<li>Buat form tambah task.</li>
+<li>Tambahkan edit task.</li>
+<li>Tambahkan delete dengan dialog konfirmasi.</li>
+<li>Tambahkan toggle selesai.</li>
+<li>Tambahkan filter.</li>
+<li>Simpan data lokal.</li>
+<li>Rapikan theme.</li>
+<li>Tambahkan test kecil.</li>
+</ol>
+<p>Contoh model:</p>
+<div class="code-card"><div class="code-label">dart</div><pre><code>class Task {
+  final String id;
+  final String title;
+  final String description;
+  final bool isDone;
+
+  const Task({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.isDone,
+  });
+
+  Task copyWith({
+    String? title,
+    String? description,
+    bool? isDone,
+  }) {
+    return Task(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isDone: isDone ?? this.isDone,
+    );
+  }
+}</code></pre></div>
+<p>Kenapa <code>copyWith</code> penting?</p>
+<ul>
+<li>Membuat object baru tanpa mengubah object lama.</li>
+<li>Cocok untuk state management.</li>
+<li>Lebih aman untuk data immutable.</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="18-roadmap-setelah-materi-ini">
+<h2>18. Roadmap Setelah Materi Ini</h2>
+<p>Setelah memahami materi lanjutan, lanjutkan ke:</p>
+<ol>
+<li>State management pilihan</li>
+</ol>
+<ul>
+<li>Riverpod</li>
+<li>Bloc/Cubit</li>
+<li>Provider lebih dalam</li>
+</ul>
+<ol>
+<li>Arsitektur</li>
+</ol>
+<ul>
+<li>Repository pattern</li>
+<li>Clean architecture dasar</li>
+<li>Dependency injection</li>
+<li>Feature-first folder structure</li>
+</ul>
+<ol>
+<li>Networking lebih kuat</li>
+</ol>
+<ul>
+<li>Interceptor</li>
+<li>Token refresh</li>
+<li>Timeout</li>
+<li>Retry</li>
+<li>Pagination</li>
+</ul>
+<ol>
+<li>Database lokal</li>
+</ol>
+<ul>
+<li>SQLite</li>
+<li>Hive</li>
+<li>Isar</li>
+<li>Offline-first app</li>
+</ul>
+<ol>
+<li>UI lanjutan</li>
+</ol>
+<ul>
+<li>Animation</li>
+<li>CustomPaint</li>
+<li>Responsive layout</li>
+<li>Adaptive UI Android/iOS</li>
+</ul>
+<ol>
+<li>Testing dan CI</li>
+</ol>
+<ul>
+<li>Unit test</li>
+<li>Widget test</li>
+<li>Integration test</li>
+<li>GitHub Actions</li>
+</ul>
+<ol>
+<li>Production readiness</li>
+</ol>
+<ul>
+<li>Crash reporting</li>
+<li>Analytics</li>
+<li>Logging</li>
+<li>Performance profiling</li>
+<li>App signing</li>
+</ul>
+<hr class="section-rule">
+<section class="lesson-section" id="checklist-penguasaan-lanjutan">
+<h2>Checklist Penguasaan Lanjutan</h2>
+<div class="checklist">
+<label class="check-item"><input type="checkbox"> <span>Bisa memisahkan page, widget, model, repository, dan service.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa membuat model dengan <code>fromJson</code> dan <code>toJson</code>.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa menangani loading, empty, error, dan success state.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa membuat form dengan <code>Form</code> dan <code>TextFormField</code>.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa memakai named routes.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa menyimpan preferensi sederhana.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa membuat alur CRUD sederhana.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa membuat theme kecil yang konsisten.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa menampilkan pesan error yang ramah.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa menulis unit test sederhana.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa menjalankan <code>flutter test</code>.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa build APK atau App Bundle release.</span></label>
+<label class="check-item"><input type="checkbox"> <span>Bisa membuat mini project Task Manager.</span></label>
+</div>
+<p>Jika checklist ini sudah banyak terpenuhi, kamu sudah siap masuk ke topik Flutter intermediate yang lebih serius.</p>
+<hr class="section-rule">
+<section class="lesson-section" id="penutup">
+<h2>Penutup</h2>
+<p>Belajar Flutter lanjutan bukan berarti langsung memakai arsitektur yang rumit. Mulailah dari kebiasaan kecil: pecah widget, rapikan folder, pisahkan data layer, tangani semua state layar, dan buat error message yang manusiawi.</p>
+<p>Jika materi dasar membuat kamu bisa membangun layar, materi lanjutan ini membuat kamu bisa membangun aplikasi yang lebih tahan tumbuh.</p>
+    </article>
+  </main>
+  <button class="back-top" id="backTop" type="button" aria-label="Kembali ke atas">↑</button>
+  <script src="script.js"></script>
+</body>
+</html>
