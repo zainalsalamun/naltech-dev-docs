@@ -280,12 +280,14 @@ a { color: inherit; }
 
 .nav-group,
 .nav-doc,
+.nav-section,
 .nav-chapter {
   border: 0;
 }
 
 .nav-group summary,
 .nav-doc summary,
+.nav-section summary,
 .nav-chapter summary {
   list-style: none;
   cursor: pointer;
@@ -293,6 +295,7 @@ a { color: inherit; }
 
 .nav-group summary::-webkit-details-marker,
 .nav-doc summary::-webkit-details-marker,
+.nav-section summary::-webkit-details-marker,
 .nav-chapter summary::-webkit-details-marker {
   display: none;
 }
@@ -306,6 +309,7 @@ a { color: inherit; }
 }
 
 .nav-group > summary::after,
+.nav-section > summary::after,
 .nav-doc > summary::after,
 .nav-chapter > summary::after {
   content: "⌄";
@@ -316,9 +320,37 @@ a { color: inherit; }
 }
 
 .nav-group[open] > summary::after,
+.nav-section[open] > summary::after,
 .nav-doc[open] > summary::after,
 .nav-chapter[open] > summary::after {
   transform: rotate(180deg);
+}
+
+.nav-section {
+  margin: 8px 0 12px;
+}
+
+.nav-section > summary {
+  position: relative;
+  display: block;
+  padding: 11px 34px 11px 16px;
+  color: #E5EDF7;
+  background: #0F1A24;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.nav-section > summary small {
+  display: block;
+  color: #8B99A9;
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.nav-section-body {
+  padding: 6px 0 4px 12px;
+  border-left: 1px solid #253444;
 }
 
 .nav-doc-link,
@@ -350,6 +382,7 @@ a { color: inherit; }
 }
 
 .nav-doc-link:hover,
+.nav-section > summary:hover,
 .nav-doc > summary:hover,
 .nav-chapter > summary:hover,
 .nav-children a:hover,
@@ -407,6 +440,10 @@ a { color: inherit; }
 }
 
 .nav-group.is-hidden {
+  display: none;
+}
+
+.nav-section.is-hidden {
   display: none;
 }
 
