@@ -32,6 +32,52 @@ Target materi:
 - Membaca data async dengan `FutureProvider`.
 - Memahami `AsyncValue`.
 
+Cara belajar materi ini:
+
+```text
+Pahami Provider dulu
+-> pahami bahwa Riverpod membaca state lewat ref
+-> mulai dari StateProvider
+-> lanjut ke Provider untuk data turunan
+-> naik ke NotifierProvider untuk logic
+-> gunakan FutureProvider untuk data async
+```
+
+Riverpod bisa terasa membingungkan jika langsung masuk ke banyak jenis provider. Jadi, jangan hafalkan semuanya di awal. Pahami peran masing-masing:
+
+| Jenis | Kapan Dipakai |
+| --- | --- |
+| `StateProvider` | state kecil seperti counter, filter, search query |
+| `Provider` | data turunan atau computed state |
+| `NotifierProvider` | state yang punya banyak action/logic |
+| `FutureProvider` | data async dari API, storage, atau Firebase |
+| `AsyncValue` | membedakan loading, error, dan data |
+
+Prinsip utama Riverpod:
+
+```text
+Widget membaca state dengan ref.watch.
+Widget memanggil aksi dengan ref.read.
+Logic state disimpan di provider/notifier.
+```
+
+Perbedaan besar dari Provider biasa:
+
+```text
+Provider package -> context.watch, context.read
+Riverpod -> ref.watch, ref.read
+```
+
+Hal yang harus dipahami setelah materi ini:
+
+- kenapa `ProviderScope` wajib ada
+- apa itu `WidgetRef`
+- kenapa `ref.watch` membuat UI rebuild
+- kenapa action sebaiknya memakai `ref.read`
+- kapan `StateProvider` cukup
+- kapan harus pindah ke `NotifierProvider`
+- kenapa `AsyncValue` sangat membantu untuk API/Firebase
+
 ---
 
 ## 1. Kenapa Belajar Riverpod
@@ -831,6 +877,75 @@ Jangan terburu-buru memakai semua fitur Riverpod. Mulai dari:
 4. `NotifierProvider`
 5. `FutureProvider`
 6. `AsyncValue`
+
+---
+
+## Latihan Riverpod
+
+Kerjakan latihan ini bertahap. Jangan langsung lompat ke `NotifierProvider` kalau `StateProvider` belum terasa nyaman.
+
+### Latihan 1: Counter dengan StateProvider
+
+Buat counter dengan:
+
+- `StateProvider<int>`
+- tombol tambah
+- tombol kurang
+- tombol reset
+
+Pertanyaan untuk dicek:
+
+- Apakah app sudah dibungkus `ProviderScope`?
+- Apakah angka dibaca dengan `ref.watch`?
+- Apakah tombol mengubah state dengan `ref.read(...notifier)`?
+
+### Latihan 2: Filter Task dengan StateProvider
+
+Buat:
+
+- `selectedStatusProvider`
+- `searchQueryProvider`
+- `visibleTasksProvider`
+
+Target:
+
+- filter status tidak mengubah list asli
+- search tidak mengubah list asli
+- UI cukup membaca `visibleTasksProvider`
+
+### Latihan 3: TaskNotifier
+
+Pindahkan CRUD task ke `NotifierProvider`.
+
+Target:
+
+- `addTask`
+- `updateTask`
+- `updateStatus`
+- `deleteTask`
+
+Pertanyaan untuk dicek:
+
+- Apakah list diperbarui dengan membuat list baru?
+- Apakah UI memanggil action dengan `ref.read`?
+- Apakah UI membaca data dengan `ref.watch`?
+
+### Latihan 4: FutureProvider
+
+Buat simulasi data async:
+
+```dart
+final sampleDataProvider = FutureProvider<List<String>>((ref) async {
+  await Future.delayed(const Duration(seconds: 1));
+  return ['Dart', 'Flutter', 'Riverpod'];
+});
+```
+
+Tampilkan dengan `AsyncValue.when`:
+
+- loading
+- error
+- data
 
 ---
 
