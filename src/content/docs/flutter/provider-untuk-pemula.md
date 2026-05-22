@@ -22,6 +22,83 @@ Di materi sebelumnya, kita sudah belajar:
 
 Sekarang kita naik satu tahap: memindahkan logic state ke class khusus menggunakan `ChangeNotifier`, lalu membagikannya ke UI dengan Provider.
 
+Cara belajar materi ini:
+
+```text
+Pahami masalah setState
+-> pindahkan state ke ChangeNotifier
+-> sediakan state dengan ChangeNotifierProvider
+-> baca state dengan Consumer/watch
+-> panggil action dengan read
+```
+
+Provider akan terasa mudah jika kamu memegang satu prinsip ini:
+
+```text
+UI tidak menyimpan semua logic.
+UI hanya membaca state dan memanggil action.
+Logic perubahan data dipindahkan ke provider.
+```
+
+Bayangkan `ChangeNotifier` seperti pengelola data. Widget datang ke pengelola itu untuk bertanya, “data saat ini apa?” atau memberi perintah, “tolong tambah task ini”. Setelah data berubah, pengelola memberi tahu widget yang sedang mendengarkan agar tampilan diperbarui.
+
+Hal yang harus dipahami setelah materi ini:
+
+- kenapa `setState` mulai kurang nyaman saat logic bertambah
+- apa tugas `ChangeNotifier`
+- kenapa property sering dibuat private seperti `_count`
+- kenapa perlu getter seperti `count`
+- kapan memakai `Consumer`
+- kapan memakai `context.watch`
+- kapan memakai `context.read`
+- kenapa `notifyListeners()` sangat penting
+
+---
+
+## Gambaran Alur Provider
+
+Alur sederhana Provider:
+
+```text
+User menekan tombol
+-> UI memanggil context.read<Provider>().action()
+-> Provider mengubah data
+-> Provider memanggil notifyListeners()
+-> Consumer/context.watch mendengar perubahan
+-> UI rebuild
+```
+
+Contoh dalam kasus counter:
+
+```text
+User tekan Tambah
+-> increment() dipanggil
+-> _count bertambah
+-> notifyListeners()
+-> Text counter berubah
+```
+
+Contoh dalam kasus Task Manager:
+
+```text
+User tambah task
+-> addTask() dipanggil
+-> _tasks bertambah
+-> notifyListeners()
+-> ListView menampilkan task baru
+```
+
+Pembagian tugas:
+
+| Bagian | Tugas |
+| --- | --- |
+| Widget/Page | Menampilkan UI dan menerima input |
+| Provider | Menyimpan state dan logic |
+| Model | Menentukan bentuk data |
+| `notifyListeners()` | Memberi tahu UI bahwa state berubah |
+| `context.watch` | Membaca data dan rebuild |
+| `context.read` | Memanggil action tanpa rebuild |
+
 ---
 
 ## 1. Kenapa Perlu Provider
@@ -858,6 +935,66 @@ Provider mulai terasa kurang nyaman jika:
 - project besar dengan banyak flow
 
 Jika mulai terasa seperti itu, lanjut belajar Riverpod atau Bloc/Cubit.
+
+---
+
+## Latihan Provider
+
+Kerjakan latihan ini setelah memahami contoh counter.
+
+### Latihan 1: CounterProvider
+
+Buat `CounterProvider` dengan fitur:
+
+- tambah
+- kurang
+- reset
+- tidak boleh kurang dari 0
+
+Pertanyaan untuk dicek:
+
+- Apakah `_count` dibuat private?
+- Apakah ada getter `count`?
+- Apakah setiap perubahan memanggil `notifyListeners()`?
+- Apakah tombol memakai `context.read`?
+- Apakah teks counter memakai `Consumer` atau `context.watch`?
+
+### Latihan 2: ThemeProvider
+
+Buat provider sederhana untuk dark mode.
+
+Target:
+
+- state `bool isDarkMode`
+- function `toggleTheme`
+- UI menampilkan switch
+- switch mengubah tema
+
+Alur:
+
+```text
+User menekan switch
+-> toggleTheme dipanggil
+-> isDarkMode berubah
+-> notifyListeners
+-> MaterialApp rebuild dengan theme baru
+```
+
+### Latihan 3: TaskProvider
+
+Pindahkan logic Task Manager dari page ke provider.
+
+Target:
+
+- `addTask`
+- `updateTask`
+- `deleteTask`
+- `setStatusFilter`
+- `setSearchQuery`
+- `visibleTasks`
+- `emptyMessage`
+
+Jika selesai, halaman Task Manager seharusnya lebih pendek karena logic utama sudah pindah ke `TaskProvider`.
 
 ---
 
