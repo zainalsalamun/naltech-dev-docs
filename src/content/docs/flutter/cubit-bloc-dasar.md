@@ -34,6 +34,84 @@ Target materi:
 - Membuat contoh Task Manager dengan Cubit.
 - Mengenal Bloc dengan event-state.
 
+Cara belajar materi ini:
+
+```text
+Pahami state dulu
+-> belajar Cubit
+-> pahami emit
+-> baca state dengan BlocBuilder
+-> jalankan side effect dengan BlocListener
+-> baru pahami Bloc event-state
+```
+
+Materi ini sengaja dimulai dari Cubit, karena Cubit lebih mudah dipahami daripada Bloc penuh. Cubit cukup memanggil function, lalu function itu mengirim state baru dengan `emit`.
+
+Analogi sederhana:
+
+```text
+Cubit seperti remote control.
+User menekan tombol function.
+Cubit mengirim state baru.
+UI menyesuaikan tampilan.
+```
+
+Sedangkan Bloc lebih formal:
+
+```text
+Bloc seperti loket proses.
+User mengirim event.
+Bloc membaca event.
+Bloc menentukan state baru.
+UI menyesuaikan tampilan.
+```
+
+Hal yang harus dipahami setelah materi ini:
+
+- perbedaan Cubit dan Bloc
+- kenapa state sebaiknya immutable
+- apa fungsi `emit`
+- kapan memakai `BlocBuilder`
+- kapan memakai `BlocListener`
+- kapan memakai `BlocConsumer`
+- kenapa side effect tidak ditaruh di builder
+- kapan Cubit cukup dan kapan Bloc lebih cocok
+
+---
+
+## Gambaran Alur Cubit/Bloc
+
+Alur Cubit:
+
+```text
+User menekan tombol
+-> UI memanggil function Cubit
+-> Cubit memproses logic
+-> Cubit emit state baru
+-> BlocBuilder rebuild UI
+```
+
+Alur Bloc:
+
+```text
+User menekan tombol
+-> UI mengirim event
+-> Bloc menerima event
+-> Bloc memproses logic
+-> Bloc emit state baru
+-> BlocBuilder rebuild UI
+```
+
+Perbandingan cepat:
+
+| Bagian | Cubit | Bloc |
+| --- | --- | --- |
+| Cara mengubah state | Memanggil function | Mengirim event |
+| Boilerplate | Lebih sedikit | Lebih banyak |
+| Cocok untuk | Logic sederhana-menengah | Flow kompleks |
+| Mudah dipelajari | Lebih mudah | Lebih formal |
+| Contoh | `increment()` | `CounterIncrementPressed()` |
+
 ---
 
 ## 1. Apa Itu Cubit dan Bloc
@@ -953,6 +1031,78 @@ setState
 -> Cubit
 -> Bloc
 ```
+
+---
+
+## Latihan Cubit dan Bloc
+
+Kerjakan dari Cubit dulu. Bloc penuh bisa dipelajari setelah Cubit terasa jelas.
+
+### Latihan 1: CounterCubit
+
+Buat `CounterCubit` dengan:
+
+- `increment`
+- `decrement`
+- `reset`
+- tidak boleh kurang dari 0
+
+Pertanyaan untuk dicek:
+
+- Apakah state awal dari `super(0)`?
+- Apakah setiap perubahan memakai `emit`?
+- Apakah UI memakai `BlocBuilder`?
+- Apakah tombol memakai `context.read<CounterCubit>()`?
+
+### Latihan 2: TaskCubit
+
+Buat `TaskCubit` dengan state khusus bernama `TaskState`.
+
+Target:
+
+- `tasks`
+- `selectedStatus`
+- `searchQuery`
+- `visibleTasks`
+- `emptyMessage`
+
+Action:
+
+- `addTask`
+- `updateTask`
+- `updateStatus`
+- `deleteTask`
+- `setStatusFilter`
+- `setSearchQuery`
+
+Pertanyaan untuk dicek:
+
+- Apakah state dibuat immutable?
+- Apakah update list membuat list baru?
+- Apakah `copyWith` sudah dipakai?
+
+### Latihan 3: BlocListener
+
+Tambahkan listener untuk menampilkan `SnackBar` setelah task berhasil dihapus.
+
+Tujuannya:
+
+- pahami bahwa `BlocBuilder` untuk UI
+- pahami bahwa `BlocListener` untuk side effect
+
+### Latihan 4: CounterBloc
+
+Setelah Cubit aman, buat versi Bloc:
+
+- `CounterIncrementPressed`
+- `CounterDecrementPressed`
+- `CounterResetPressed`
+
+Bandingkan dengan Cubit:
+
+- mana yang lebih mudah ditulis?
+- mana yang lebih eksplisit?
+- kapan event terasa berguna?
 
 ---
 
