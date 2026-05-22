@@ -21,6 +21,76 @@ CRUD adalah singkatan dari:
 
 Di project Flutter, CRUD bisa terjadi di memory, local storage, database, atau API. Untuk pemula, mulai dulu dari data lokal di memory.
 
+Cara memahami materi ini:
+
+```text
+Data disimpan di List
+-> user melakukan aksi
+-> List berubah
+-> setState dipanggil
+-> UI membaca ulang List
+-> tampilan berubah
+```
+
+Pada tahap ini, kita belum memakai database. Semua data hanya disimpan di memory aplikasi. Artinya, data akan hilang ketika aplikasi ditutup. Itu tidak masalah untuk belajar, karena fokus utama materi ini adalah memahami logika CRUD terlebih dahulu.
+
+Bayangkan aplikasi Task Manager seperti papan tugas kecil:
+
+- saat user menambah task, kita memasukkan kartu baru ke papan
+- saat user melihat task, kita membaca semua kartu di papan
+- saat user mengedit task, kita mengganti isi kartu tertentu
+- saat user menghapus task, kita membuang kartu dari papan
+- saat user filter/search, kita tidak menghapus data asli, hanya memilih kartu mana yang ingin ditampilkan
+
+Hal yang harus dipahami setelah materi ini:
+
+- dari mana data berasal
+- bagaimana data ditambahkan
+- bagaimana data dicari berdasarkan `id`
+- kenapa update lebih aman memakai `copyWith`
+- kenapa filter dan search sebaiknya tidak mengubah data asli
+- kapan UI harus dipanggil ulang dengan `setState`
+
+---
+
+## Cara Berpikir CRUD Lokal
+
+Sebelum masuk ke kode, pahami dulu peran setiap bagian.
+
+| Bagian | Tugas |
+| --- | --- |
+| `Task` | Bentuk data task |
+| `List<Task>` | Tempat menyimpan banyak task |
+| `addTask` | Menambahkan task baru |
+| `updateTask` | Mengubah task yang sudah ada |
+| `deleteTask` | Menghapus task |
+| `filteredTasks` | Menentukan task mana yang tampil |
+| `searchQuery` | Kata kunci pencarian |
+| `selectedStatus` | Filter status yang sedang aktif |
+
+Contoh alur tambah data:
+
+```text
+User isi form
+-> tekan tombol Simpan
+-> aplikasi membuat object Task
+-> Task dimasukkan ke List
+-> setState dipanggil
+-> ListView menampilkan data baru
+```
+
+Contoh alur filter data:
+
+```text
+Data asli tetap lengkap
+-> user memilih status Done
+-> aplikasi membuat hasil filter sementara
+-> UI menampilkan hasil filter
+-> data asli tidak berubah
+```
+
+Ini penting. Filter dan search sebaiknya hanya mengatur tampilan, bukan menghapus data asli.
+
 ---
 
 ## 1. Membuat Model Task
@@ -461,6 +531,63 @@ Filter dan Search
 -> aplikasi menghitung visibleTasks
 -> ListView menampilkan hasil akhir
 ```
+
+---
+
+## Latihan Bertahap
+
+Kerjakan latihan ini sebelum masuk Project Task Manager.
+
+### Latihan 1: Tambah Data
+
+Buat function `addTask`, lalu tambahkan minimal 3 task awal.
+
+Target:
+
+- task punya `id`
+- task punya `title`
+- task punya `description`
+- task punya `status`
+
+Pertanyaan untuk dicek:
+
+- Apakah task baru muncul di UI?
+- Apakah `setState` sudah dipanggil?
+- Apakah task baru otomatis punya status `todo`?
+
+### Latihan 2: Update Status
+
+Buat function untuk mengubah status task dari `todo` menjadi `progress`, lalu dari `progress` menjadi `done`.
+
+Target:
+
+- cari task berdasarkan `id`
+- gunakan `copyWith`
+- jangan mengubah object lama secara langsung
+
+Pertanyaan untuk dicek:
+
+- Apa yang terjadi jika `id` tidak ditemukan?
+- Kenapa perlu `indexWhere`?
+- Kenapa tidak cukup memakai `tasks[index].status = status`?
+
+### Latihan 3: Filter dan Search
+
+Buat filter status dan search keyword.
+
+Target:
+
+- filter `todo`
+- filter `progress`
+- filter `done`
+- search berdasarkan `title`
+- search berdasarkan `description`
+
+Pertanyaan untuk dicek:
+
+- Apakah data asli tetap aman?
+- Apakah search bekerja meskipun huruf besar/kecil berbeda?
+- Apa pesan yang tampil jika hasil kosong?
 
 ---
 
