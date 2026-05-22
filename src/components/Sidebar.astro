@@ -20,6 +20,14 @@ for (const category of Object.keys(grouped)) {
   grouped[category].sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
 }
 
+const stateManagementSlugs = new Set([
+  "flutter/state-management-dasar",
+  "flutter/crud-lokal-filter-search",
+  "flutter/provider-untuk-pemula",
+  "flutter/riverpod-untuk-pemula",
+  "flutter/cubit-bloc-dasar",
+]);
+
 const headingGroups = headings
   .filter((heading) => heading.depth === 2 || heading.depth === 3)
   .reduce<{ slug: string; text: string; children: { slug: string; text: string }[] }[]>((groups, heading) => {
@@ -50,52 +58,109 @@ const headingGroups = headings
   </label>
 
   <nav class="docs-nav" id="docsNav">
-    {Object.entries(grouped).map(([category, entries]) => (
-      <details class="nav-group" open={entries.some((entry) => entry.slug === currentSlug)}>
-        <summary>{category}</summary>
-        {entries.map((entry) => (
-          entry.slug === currentSlug ? (
-            <details class="nav-doc active" open>
-              <summary>
+    {Object.entries(grouped).map(([category, entries]) => {
+      const stateManagementEntries = entries.filter((entry) => stateManagementSlugs.has(entry.slug));
+      const regularEntries = entries.filter((entry) => !stateManagementSlugs.has(entry.slug));
+      const isStateManagementActive = stateManagementEntries.some((entry) => entry.slug === currentSlug);
+
+      return (
+        <details class="nav-group" open={entries.some((entry) => entry.slug === currentSlug)}>
+          <summary>{category}</summary>
+          {regularEntries.map((entry) => (
+            entry.slug === currentSlug ? (
+              <details class="nav-doc active" open>
+                <summary>
+                  <span>{entry.data.title}</span>
+                  {entry.data.level && <small>{entry.data.level}</small>}
+                </summary>
+                <div class="nav-doc-body">
+                  <a class="nav-overview" href={`/docs/${entry.slug}/`} data-title={`${entry.data.title} ringkasan`.toLowerCase()}>
+                    Ringkasan materi
+                  </a>
+                  {headingGroups.map((group, index) => (
+                    group.children.length > 0 ? (
+                      <details class="nav-chapter" open={index === 0}>
+                        <summary>{group.text}</summary>
+                        <div class="nav-children">
+                          <a href={`#${group.slug}`} data-title={group.text.toLowerCase()}>Buka bagian</a>
+                          {group.children.map((child) => (
+                            <a href={`#${child.slug}`} data-title={child.text.toLowerCase()}>{child.text}</a>
+                          ))}
+                        </div>
+                      </details>
+                    ) : (
+                      <a class="nav-chapter-link" href={`#${group.slug}`} data-title={group.text.toLowerCase()}>
+                        {group.text}
+                      </a>
+                    )
+                  ))}
+                </div>
+              </details>
+            ) : (
+              <a
+                href={`/docs/${entry.slug}/`}
+                class="nav-doc-link"
+                data-title={`${entry.data.title} ${entry.data.tags.join(" ")}`.toLowerCase()}
+              >
                 <span>{entry.data.title}</span>
                 {entry.data.level && <small>{entry.data.level}</small>}
+              </a>
+            )
+          ))}
+          {stateManagementEntries.length > 0 && (
+            <details class="nav-section" open={isStateManagementActive}>
+              <summary>
+                <span>State Management</span>
+                <small>{stateManagementEntries.length} materi</small>
               </summary>
-              <div class="nav-doc-body">
-                <a class="nav-overview" href={`/docs/${entry.slug}/`} data-title={`${entry.data.title} ringkasan`.toLowerCase()}>
-                  Ringkasan materi
-                </a>
-                {headingGroups.map((group, index) => (
-                  group.children.length > 0 ? (
-                    <details class="nav-chapter" open={index === 0}>
-                      <summary>{group.text}</summary>
-                      <div class="nav-children">
-                        <a href={`#${group.slug}`} data-title={group.text.toLowerCase()}>Buka bagian</a>
-                        {group.children.map((child) => (
-                          <a href={`#${child.slug}`} data-title={child.text.toLowerCase()}>{child.text}</a>
+              <div class="nav-section-body">
+                {stateManagementEntries.map((entry) => (
+                  entry.slug === currentSlug ? (
+                    <details class="nav-doc active" open>
+                      <summary>
+                        <span>{entry.data.title}</span>
+                        {entry.data.level && <small>{entry.data.level}</small>}
+                      </summary>
+                      <div class="nav-doc-body">
+                        <a class="nav-overview" href={`/docs/${entry.slug}/`} data-title={`${entry.data.title} ringkasan`.toLowerCase()}>
+                          Ringkasan materi
+                        </a>
+                        {headingGroups.map((group, index) => (
+                          group.children.length > 0 ? (
+                            <details class="nav-chapter" open={index === 0}>
+                              <summary>{group.text}</summary>
+                              <div class="nav-children">
+                                <a href={`#${group.slug}`} data-title={group.text.toLowerCase()}>Buka bagian</a>
+                                {group.children.map((child) => (
+                                  <a href={`#${child.slug}`} data-title={child.text.toLowerCase()}>{child.text}</a>
+                                ))}
+                              </div>
+                            </details>
+                          ) : (
+                            <a class="nav-chapter-link" href={`#${group.slug}`} data-title={group.text.toLowerCase()}>
+                              {group.text}
+                            </a>
+                          )
                         ))}
                       </div>
                     </details>
                   ) : (
-                    <a class="nav-chapter-link" href={`#${group.slug}`} data-title={group.text.toLowerCase()}>
-                      {group.text}
+                    <a
+                      href={`/docs/${entry.slug}/`}
+                      class="nav-doc-link"
+                      data-title={`${entry.data.title} ${entry.data.tags.join(" ")}`.toLowerCase()}
+                    >
+                      <span>{entry.data.title}</span>
+                      {entry.data.level && <small>{entry.data.level}</small>}
                     </a>
                   )
                 ))}
               </div>
             </details>
-          ) : (
-            <a
-              href={`/docs/${entry.slug}/`}
-              class="nav-doc-link"
-              data-title={`${entry.data.title} ${entry.data.tags.join(" ")}`.toLowerCase()}
-            >
-              <span>{entry.data.title}</span>
-              {entry.data.level && <small>{entry.data.level}</small>}
-            </a>
-          )
-        ))}
-      </details>
-    ))}
+          )}
+        </details>
+      );
+    })}
   </nav>
 </aside>
 
@@ -103,6 +168,7 @@ const headingGroups = headings
   const search = document.getElementById("docsSearch");
   const links = [...document.querySelectorAll("[data-title]")];
   const groups = [...document.querySelectorAll(".nav-group")];
+  const sections = [...document.querySelectorAll(".nav-section")];
 
   search?.addEventListener("input", () => {
     const term = search.value.trim().toLowerCase();
@@ -113,6 +179,11 @@ const headingGroups = headings
       const visible = [...group.querySelectorAll("[data-title]")].some((link) => !link.classList.contains("is-hidden"));
       group.classList.toggle("is-hidden", Boolean(term) && !visible);
       if (term && visible) group.open = true;
+    });
+    sections.forEach((section) => {
+      const visible = [...section.querySelectorAll("[data-title]")].some((link) => !link.classList.contains("is-hidden"));
+      section.classList.toggle("is-hidden", Boolean(term) && !visible);
+      if (term && visible) section.open = true;
     });
   });
 </script>
