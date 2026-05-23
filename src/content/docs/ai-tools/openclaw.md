@@ -1248,6 +1248,515 @@ Checklist VPS:
 - Log dan status Gateway bisa dicek.
 - 9Router menerima request jika dipakai sebagai provider.
 
+## Studi Kasus 1: OpenClaw untuk Dokumentasi Project
+
+Studi kasus ini cocok untuk belajar karena risikonya rendah, tetapi manfaatnya langsung terasa. OpenClaw diminta membaca project, memahami struktur, lalu membuat dokumentasi developer.
+
+### Tujuan
+
+Membuat dokumentasi project yang berisi:
+
+- gambaran umum project
+- cara install dependency
+- cara menjalankan development server
+- struktur folder
+- file penting
+- environment variable
+- command build/test
+- catatan troubleshooting
+
+### Setup awal
+
+Gunakan project dummy atau project yang tidak berisi data sensitif.
+
+Contoh batasan:
+
+```text
+Kamu hanya boleh membaca folder project ini.
+Jangan mengubah file sebelum meminta persetujuan.
+Jangan menjalankan command yang menghapus file.
+Jika perlu menjalankan command, jelaskan dulu tujuannya.
+```
+
+### Prompt awal
+
+```text
+Baca project ini sebagai developer baru.
+Tolong jelaskan:
+1. project ini dibuat untuk apa
+2. teknologi utama yang dipakai
+3. struktur folder penting
+4. cara menjalankan project secara lokal
+5. file konfigurasi yang perlu diperhatikan
+6. risiko setup yang mungkin membingungkan developer baru
+
+Jangan edit file dulu. Berikan laporan ringkas dan jelas.
+```
+
+### Prompt lanjutan
+
+Jika laporan awal sudah benar:
+
+```text
+Buat draft dokumentasi README untuk project ini.
+Strukturnya:
+- Overview
+- Requirements
+- Installation
+- Environment Variables
+- Development
+- Build
+- Testing
+- Troubleshooting
+
+Jangan menulis API key atau secret.
+Jika ada informasi yang belum pasti, beri label "perlu dicek".
+```
+
+### Prompt eksekusi
+
+Jika ingin OpenClaw menulis file:
+
+```text
+Tulis draft dokumentasi tadi ke file docs/setup-development.md.
+Jangan mengubah file lain.
+Setelah selesai, tampilkan ringkasan perubahan.
+```
+
+### Verifikasi manual
+
+Setelah file dibuat, cek:
+
+- Apakah command install benar?
+- Apakah nama package sesuai?
+- Apakah environment variable tidak membocorkan secret?
+- Apakah instruksi bisa dijalankan developer baru?
+- Apakah ada asumsi yang perlu diperbaiki?
+
+## Studi Kasus 2: OpenClaw untuk Monitoring Server
+
+Studi kasus ini cocok jika OpenClaw dijalankan di VPS atau server internal.
+
+### Tujuan
+
+OpenClaw membantu mengecek kondisi server dan membuat ringkasan:
+
+- status service
+- pemakaian disk
+- pemakaian memory
+- error log terbaru
+- rekomendasi tindakan
+
+### Prompt aman
+
+```text
+Cek kondisi server ini dengan command non-destruktif.
+Boleh menjalankan:
+- uptime
+- df -h
+- free -h
+- systemctl status untuk service yang relevan
+- tail log maksimal 100 baris
+
+Jangan restart service.
+Jangan menghapus file.
+Jangan mengubah konfigurasi.
+
+Buat laporan ringkas: kondisi umum, masalah yang ditemukan, dan rekomendasi langkah berikutnya.
+```
+
+### Command yang biasanya aman
+
+```bash
+uptime
+df -h
+free -h
+systemctl status nginx
+systemctl status docker
+journalctl -u nginx -n 100 --no-pager
+```
+
+### Output yang diharapkan
+
+```text
+Status server:
+- CPU load normal
+- Disk / hampir penuh 87%
+- Nginx aktif
+- Docker aktif
+- Ada error 502 di log Nginx dalam 1 jam terakhir
+
+Rekomendasi:
+1. cek upstream app
+2. cek container app
+3. bersihkan log lama jika disk terus naik
+```
+
+## Studi Kasus 3: OpenClaw untuk Research Teknis
+
+Studi kasus ini cocok untuk membandingkan tools atau membuat keputusan teknis.
+
+### Tujuan
+
+OpenClaw membantu membuat perbandingan beberapa opsi.
+
+Contoh:
+
+```text
+Bandingkan 9Router, LiteLLM, OpenRouter, dan OpenClaw untuk kebutuhan AI workflow NalTech.
+```
+
+### Prompt research
+
+```text
+Tolong buat riset teknis tentang pilihan AI gateway dan AI agent untuk tim kecil.
+
+Bandingkan:
+- 9Router
+- LiteLLM
+- OpenRouter
+- OpenClaw
+
+Untuk setiap tool, jelaskan:
+1. fungsi utama
+2. kapan cocok dipakai
+3. kelebihan
+4. kekurangan
+5. risiko keamanan
+6. apakah cocok untuk NalTech
+
+Buat kesimpulan arsitektur yang paling masuk akal untuk tahap belajar dan tahap produksi.
+```
+
+### Format hasil yang bagus
+
+```text
+Ringkasan keputusan:
+- Untuk routing model: 9Router
+- Untuk agent lokal: OpenClaw lokal
+- Untuk coding: Codex/OpenCode/OpenClaw sesuai kebutuhan
+- Untuk automation 24/7: OpenClaw VPS
+
+Alasan:
+...
+```
+
+## Prompt Siap Pakai
+
+Bagian ini berisi prompt yang bisa langsung dipakai atau dimodifikasi.
+
+### Prompt memahami project
+
+```text
+Baca project ini sebagai senior developer.
+Jelaskan tujuan project, stack teknologi, struktur folder, alur utama aplikasi, dan command penting.
+Jangan edit file.
+Jika ada hal yang belum pasti, tulis sebagai asumsi.
+```
+
+### Prompt membuat dokumentasi
+
+```text
+Buat dokumentasi developer untuk project ini.
+Fokus pada cara setup lokal, env variable, menjalankan project, build, test, dan troubleshooting.
+Jangan tulis secret atau API key.
+Simpan sebagai draft terlebih dahulu dan minta konfirmasi sebelum mengubah file.
+```
+
+### Prompt review keamanan
+
+```text
+Review project ini dari sisi keamanan dasar.
+Cari potensi masalah seperti hardcoded secret, file env yang ikut commit, permission terlalu luas, dependency mencurigakan, dan endpoint tanpa proteksi.
+Jangan ubah file.
+Berikan findings dengan prioritas tinggi, sedang, rendah.
+```
+
+### Prompt debugging
+
+```text
+Saya mengalami error berikut:
+
+[paste error di sini]
+
+Tolong:
+1. jelaskan arti error
+2. cari kemungkinan penyebab
+3. cek file yang relevan
+4. berikan opsi perbaikan paling aman
+5. jangan edit file sebelum saya setujui
+```
+
+### Prompt menjalankan test
+
+```text
+Jalankan test project ini dengan command yang sesuai.
+Jika test gagal, jelaskan penyebabnya berdasarkan output.
+Jangan mengubah source code dulu.
+Berikan rekomendasi fix.
+```
+
+### Prompt membuat changelog
+
+```text
+Baca perubahan git saat ini.
+Buat changelog singkat dalam bahasa Indonesia:
+- fitur baru
+- perbaikan
+- perubahan teknis
+- catatan migrasi jika ada
+
+Jangan commit.
+```
+
+### Prompt membuat issue GitHub
+
+```text
+Berdasarkan error/log berikut, buat draft issue GitHub.
+Format:
+- Judul
+- Ringkasan masalah
+- Langkah reproduksi
+- Expected behavior
+- Actual behavior
+- Log relevan
+- Kemungkinan penyebab
+```
+
+### Prompt monitoring server
+
+```text
+Cek kondisi server dengan command non-destruktif.
+Jangan restart, hapus, atau ubah konfigurasi.
+Buat laporan status CPU, memory, disk, service penting, dan error log terbaru.
+```
+
+### Prompt ringkasan meeting
+
+```text
+Baca catatan meeting berikut.
+Buat:
+- ringkasan singkat
+- keputusan penting
+- action items
+- siapa bertanggung jawab
+- deadline jika disebutkan
+- pertanyaan yang masih terbuka
+```
+
+### Prompt data CSV
+
+```text
+Baca file CSV ini.
+Tolong jelaskan kolom yang tersedia, jumlah baris, data kosong, data duplikat, dan insight awal.
+Jangan ubah file asli.
+Jika perlu membuat output, buat file baru.
+```
+
+## Template AGENTS.md
+
+`AGENTS.md` dipakai untuk menjelaskan peran agent dan cara agent bekerja di workspace.
+
+Contoh template:
+
+```md
+# Agent Role
+
+Kamu adalah AI development assistant untuk project ini.
+Tugas utama kamu adalah membantu membaca kode, menjelaskan alur, membuat dokumentasi, debugging, dan memberi saran perbaikan.
+
+## Prinsip Kerja
+
+- Baca konteks project sebelum memberi kesimpulan.
+- Jangan mengubah file tanpa instruksi eksplisit.
+- Jangan menjalankan command destruktif.
+- Jika perlu menjalankan command, jelaskan tujuannya.
+- Prioritaskan solusi sederhana dan sesuai struktur project.
+- Jangan menulis API key, token, password, atau secret ke dokumentasi.
+
+## Batasan
+
+- Jangan akses folder di luar workspace kecuali diminta.
+- Jangan melakukan deploy tanpa persetujuan.
+- Jangan install dependency baru tanpa menjelaskan alasannya.
+- Jangan commit perubahan tanpa instruksi.
+
+## Output
+
+Saat memberi laporan, gunakan format:
+
+- Ringkasan
+- Temuan penting
+- Rekomendasi
+- Langkah berikutnya
+```
+
+## Template SOUL.md
+
+`SOUL.md` bisa dipakai untuk mengatur gaya komunikasi, preferensi, dan kebiasaan kerja agent.
+
+Contoh template:
+
+```md
+# Agent Style
+
+Gunakan bahasa Indonesia yang jelas, praktis, dan ramah.
+Jelaskan hal teknis dengan contoh sederhana.
+Jika ada risiko, sebutkan secara langsung.
+
+## Preferensi
+
+- Jawaban singkat untuk pertanyaan sederhana.
+- Penjelasan bertahap untuk konsep baru.
+- Gunakan checklist untuk tutorial.
+- Gunakan tabel untuk perbandingan.
+- Beri contoh command jika relevan.
+
+## Cara Mengambil Keputusan
+
+- Pilih pendekatan yang aman terlebih dahulu.
+- Untuk project existing, ikuti pola yang sudah ada.
+- Jika ada beberapa opsi, jelaskan trade-off.
+- Jika informasi belum pasti, tulis sebagai asumsi.
+
+## Hal yang Dihindari
+
+- Jangan terlalu percaya diri jika belum memeriksa file.
+- Jangan menyarankan command berbahaya tanpa alasan kuat.
+- Jangan membocorkan secret.
+- Jangan membuat perubahan besar tanpa rencana.
+```
+
+## Template TOOLS.md
+
+`TOOLS.md` dipakai untuk mengatur tool yang boleh digunakan agent dan aturan penggunaannya.
+
+Contoh template:
+
+```md
+# Tool Policy
+
+Agent boleh memakai tool untuk membaca file, mencari teks, menjalankan command non-destruktif, dan membuat dokumentasi.
+
+## Tool yang Diizinkan
+
+- Membaca file di workspace.
+- Mencari teks dengan ripgrep.
+- Melihat status git.
+- Menjalankan command build/test/lint.
+- Membuat file dokumentasi baru jika diminta.
+
+## Tool yang Perlu Konfirmasi
+
+- Install dependency baru.
+- Mengubah konfigurasi deployment.
+- Menjalankan migration database.
+- Restart service.
+- Mengubah permission file.
+- Mengakses folder di luar workspace.
+
+## Tool yang Dilarang Tanpa Izin Eksplisit
+
+- Menghapus file atau folder.
+- Reset git history.
+- Force push.
+- Menghapus database.
+- Mengirim email/message ke pihak luar.
+- Deploy ke production.
+- Membuka secret atau credential yang tidak diperlukan.
+
+## Aturan Command
+
+Sebelum menjalankan command, pastikan:
+
+1. command sesuai tujuan
+2. command tidak destruktif
+3. output diperlukan untuk menyelesaikan tugas
+4. user memahami risiko jika command berisiko
+```
+
+## Template Workflow Tim
+
+Jika OpenClaw dipakai untuk tim kecil, buat aturan kerja yang jelas.
+
+Contoh:
+
+```md
+# OpenClaw Team Workflow
+
+## Tujuan
+
+OpenClaw dipakai untuk membantu dokumentasi, debugging, research teknis, dan automation ringan.
+
+## Channel
+
+- Discord: diskusi dan request ringan.
+- GitHub: issue, PR review, dan changelog.
+- VPS: automation terjadwal dan monitoring.
+
+## Agent
+
+- Local Agent: dipakai developer di laptop masing-masing.
+- Server Agent: dipakai untuk automation 24/7.
+- Documentation Agent: fokus membuat dan merapikan dokumentasi.
+
+## Aturan
+
+- Perubahan kode harus direview manusia.
+- Agent tidak boleh deploy production tanpa approval.
+- Secret tidak boleh dikirim ke chat.
+- Semua automation penting harus punya log.
+- Semua workflow baru diuji di environment staging.
+```
+
+## Arsitektur NalTech AI Stack
+
+Arsitektur yang disarankan untuk tahap belajar:
+
+```text
+Laptop developer
+  -> OpenClaw lokal
+  -> Codex / OpenCode untuk coding
+  -> browser lokal
+
+VPS
+  -> 9Router sebagai AI gateway
+
+Provider AI
+  -> OpenAI / Anthropic / Gemini / MiMo / provider lain
+```
+
+Arsitektur untuk tahap produksi ringan:
+
+```text
+Developer laptop
+  -> OpenClaw lokal untuk coding dan file project
+  -> 9Router VPS untuk routing model
+
+VPS automation
+  -> OpenClaw server untuk workflow 24/7
+  -> Telegram/Discord/GitHub webhook
+
+VPS AI gateway
+  -> 9Router
+  -> quota tracking
+  -> usage analytics
+  -> fallback provider
+
+Provider AI
+  -> cloud model
+  -> local model jika tersedia
+```
+
+Prinsip arsitektur:
+
+- Agent lokal untuk pekerjaan yang butuh akses file pribadi.
+- Agent VPS untuk automation yang harus online terus.
+- 9Router untuk routing model dan monitoring token.
+- Jangan expose port internal langsung ke publik.
+- Semua akses publik lewat HTTPS.
+- Human review tetap wajib untuk perubahan penting.
+
 ## Checklist Keamanan
 
 Karena OpenClaw bisa menjalankan aksi nyata, keamanan harus dianggap serius.
