@@ -509,6 +509,15 @@ a { color: inherit; }
   font-weight: 650;
 }
 
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 28px 0;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
 .prose code {
   font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
   background: #E8F4FF;
