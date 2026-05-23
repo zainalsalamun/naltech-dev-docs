@@ -1757,6 +1757,476 @@ Prinsip arsitektur:
 - Semua akses publik lewat HTTPS.
 - Human review tetap wajib untuk perubahan penting.
 
+## OpenClaw vs Tools Lain
+
+OpenClaw sering terlihat mirip dengan beberapa tool AI lain, tetapi perannya berbeda. Bagian ini membantu menentukan kapan memakai OpenClaw dan kapan memakai tool lain.
+
+| Tool | Fungsi Utama | Cocok Untuk | Kurang Cocok Untuk |
+|---|---|---|---|
+| OpenClaw | Personal AI agent dan automation runtime | assistant lokal, workflow automation, integrasi chat app, tool orchestration | routing provider AI murni |
+| Codex | Coding agent di workspace/repository | membaca codebase, edit file, menjalankan test, refactor, debugging | automation 24/7 lintas aplikasi |
+| Claude Code | Coding agent berbasis Claude | coding, refactor, reasoning code, task terminal | workflow personal assistant non-coding |
+| OpenCode | Coding agent/open-source terminal assistant | coding lokal, eksperimen agent coding, integrasi model custom | automation server jangka panjang |
+| 9Router | AI gateway/router untuk provider model | routing model, fallback provider, quota tracking, usage analytics | menjalankan aksi file/browser/terminal |
+| n8n | Workflow automation visual | integrasi API, trigger, webhook, automation bisnis | reasoning agent kompleks tanpa custom logic |
+| LangChain/LangGraph | Framework membangun aplikasi agent | membangun agent custom, multi-step graph, product AI | pengguna non-developer yang ingin langsung pakai |
+| Ollama | Menjalankan local model | eksperimen model lokal, privacy, offline/local inference | orchestration agent lengkap |
+
+### Kapan memakai OpenClaw
+
+Gunakan OpenClaw jika kebutuhan utamanya:
+
+- agent yang bisa memakai tool
+- menjalankan workflow dari chat/CLI
+- automation yang butuh reasoning
+- akses file, browser, terminal, API, atau aplikasi
+- personal assistant yang bisa dikustomisasi
+- workflow yang bisa berkembang menjadi multi-agent
+
+Contoh:
+
+```text
+Saya ingin agent yang bisa membaca project, menjalankan test, membuat ringkasan, lalu mengirim laporan ke Discord.
+```
+
+### Kapan memakai Codex atau Claude Code
+
+Gunakan Codex atau Claude Code jika fokusnya coding dalam repository:
+
+- memahami codebase
+- memperbaiki bug
+- menulis test
+- refactor
+- review perubahan
+- menjalankan command development
+
+Contoh:
+
+```text
+Saya ingin agent memperbaiki bug di repo ini dan menjalankan test sampai lulus.
+```
+
+### Kapan memakai 9Router
+
+Gunakan 9Router jika masalah utamanya ada di model/provider:
+
+- ingin satu endpoint untuk banyak provider
+- ingin fallback model
+- ingin analytics token
+- ingin quota tracking
+- ingin memakai model berbeda untuk task berbeda
+
+Contoh:
+
+```text
+Saya ingin semua tool AI memakai endpoint yang sama, tetapi routing model dan biaya dipantau dari dashboard.
+```
+
+### Kapan memakai n8n
+
+Gunakan n8n jika workflow lebih deterministik dan berbasis trigger:
+
+- saat form masuk, kirim email
+- saat webhook GitHub masuk, buat tiket
+- setiap pagi ambil data spreadsheet dan kirim laporan
+
+OpenClaw lebih cocok jika workflow butuh reasoning fleksibel, sedangkan n8n lebih cocok jika workflow sudah jelas dan berulang.
+
+### Kapan memakai LangChain atau LangGraph
+
+Gunakan LangChain/LangGraph jika ingin membangun aplikasi agent sendiri sebagai produk atau sistem custom.
+
+Contoh:
+
+```text
+Saya ingin membuat aplikasi customer support AI dengan state machine, memory, retrieval, dan workflow approval.
+```
+
+OpenClaw lebih cocok untuk langsung dipakai sebagai agent, sedangkan LangChain/LangGraph lebih cocok sebagai framework development.
+
+## Security Hardening VPS
+
+Jika OpenClaw dijalankan di VPS, keamanan harus disiapkan sejak awal. Agent yang punya akses terminal, file, browser, API, atau chat app bisa berbahaya jika server terbuka tanpa proteksi.
+
+### 1. Gunakan user non-root
+
+Jangan jalankan OpenClaw sebagai root.
+
+```bash
+sudo adduser openclaw
+sudo usermod -aG sudo openclaw
+```
+
+Login sebagai user tersebut:
+
+```bash
+su - openclaw
+```
+
+### 2. Gunakan SSH key-only
+
+Di laptop lokal, buat SSH key jika belum ada:
+
+```bash
+ssh-keygen -t ed25519 -C "openclaw-vps"
+```
+
+Copy public key ke VPS:
+
+```bash
+ssh-copy-id openclaw@IP_VPS
+```
+
+Test login:
+
+```bash
+ssh openclaw@IP_VPS
+```
+
+### 3. Disable root login dan password login
+
+Edit konfigurasi SSH:
+
+```bash
+sudo nano /etc/ssh/sshd_config
+```
+
+Pastikan konfigurasi berikut:
+
+```text
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+```
+
+Restart SSH:
+
+```bash
+sudo systemctl restart ssh
+```
+
+Sebelum menutup terminal lama, buka terminal baru dan pastikan login SSH key berhasil.
+
+### 4. Aktifkan firewall UFW
+
+Izinkan SSH:
+
+```bash
+sudo ufw allow OpenSSH
+```
+
+Jika memakai reverse proxy:
+
+```bash
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+```
+
+Aktifkan:
+
+```bash
+sudo ufw enable
+sudo ufw status verbose
+```
+
+Jangan expose port internal:
+
+```text
+18789/tcp untuk OpenClaw Gateway
+20128/tcp untuk 9Router
+```
+
+Kedua port itu sebaiknya hanya bind ke `127.0.0.1` jika dipakai bersama reverse proxy.
+
+### 5. Pasang fail2ban
+
+Fail2ban membantu memblokir percobaan login yang mencurigakan.
+
+```bash
+sudo apt install -y fail2ban
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+sudo fail2ban-client status
+```
+
+### 6. Gunakan reverse proxy dengan HTTPS
+
+Jika dashboard atau endpoint harus diakses dari luar, gunakan domain dan HTTPS.
+
+Contoh:
+
+```text
+https://openclaw.example.com
+https://9router.example.com
+```
+
+Jangan akses dashboard melalui HTTP publik.
+
+### 7. Tambahkan basic auth untuk dashboard internal
+
+Jika dashboard belum punya proteksi yang cukup, tambahkan basic auth di Nginx.
+
+Install tool:
+
+```bash
+sudo apt install -y apache2-utils
+```
+
+Buat user password:
+
+```bash
+sudo htpasswd -c /etc/nginx/.htpasswd-openclaw admin
+```
+
+Tambahkan ke blok `location /` Nginx:
+
+```nginx
+auth_basic "Restricted";
+auth_basic_user_file /etc/nginx/.htpasswd-openclaw;
+```
+
+Reload Nginx:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### 8. Batasi akses berdasarkan IP jika memungkinkan
+
+Jika hanya dipakai dari IP tertentu, batasi akses di Nginx:
+
+```nginx
+allow 203.0.113.10;
+deny all;
+```
+
+Ini lebih aman daripada membuka dashboard ke seluruh internet.
+
+### 9. Simpan secret di environment variable
+
+Jangan simpan API key di file dokumentasi atau repository.
+
+Contoh:
+
+```bash
+export NINE_ROUTER_API_KEY="isi_api_key"
+export OPENAI_API_KEY="isi_api_key"
+```
+
+Untuk service systemd, secret bisa disimpan di environment file dengan permission ketat:
+
+```bash
+sudo nano /etc/openclaw.env
+sudo chmod 600 /etc/openclaw.env
+```
+
+### 10. Backup otomatis
+
+Buat folder backup:
+
+```bash
+mkdir -p ~/backups
+```
+
+Script backup sederhana:
+
+```bash
+nano ~/backup-openclaw.sh
+```
+
+Isi:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+BACKUP_DIR="$HOME/backups"
+DATE="$(date +%F)"
+
+mkdir -p "$BACKUP_DIR"
+tar -czf "$BACKUP_DIR/openclaw-$DATE.tar.gz" "$HOME/.openclaw"
+```
+
+Aktifkan:
+
+```bash
+chmod +x ~/backup-openclaw.sh
+```
+
+Jalankan manual:
+
+```bash
+~/backup-openclaw.sh
+```
+
+Tambahkan cron harian:
+
+```bash
+crontab -e
+```
+
+Isi:
+
+```text
+0 2 * * * /home/openclaw/backup-openclaw.sh
+```
+
+Simpan backup ke storage eksternal jika memungkinkan.
+
+### 11. Rotasi API key
+
+Rotasi API key secara berkala:
+
+- buat key baru di provider
+- update environment variable
+- restart OpenClaw Gateway
+- cek request berjalan
+- revoke key lama
+
+Contoh:
+
+```bash
+openclaw gateway restart
+openclaw doctor
+```
+
+### 12. Update rutin
+
+Update package server:
+
+```bash
+sudo apt update
+sudo apt upgrade -y
+```
+
+Update OpenClaw:
+
+```bash
+npm install -g openclaw@latest
+openclaw gateway restart
+openclaw doctor
+```
+
+Update 9Router jika memakai Docker:
+
+```bash
+cd /opt/9router
+docker compose pull
+docker compose up -d
+```
+
+## Permission Matrix
+
+Permission matrix membantu menentukan aksi mana yang boleh otomatis, harus konfirmasi, atau dilarang. Ini penting agar OpenClaw tidak diberi akses terlalu luas.
+
+### Prinsip dasar
+
+Gunakan prinsip **least privilege**:
+
+```text
+Berikan akses terkecil yang cukup untuk menyelesaikan tugas.
+```
+
+Jika sebuah tool tidak dibutuhkan, jangan aktifkan.
+
+### Matrix umum
+
+| Area | Boleh Otomatis | Harus Konfirmasi | Dilarang Tanpa Izin Eksplisit |
+|---|---|---|---|
+| File lokal | baca file workspace, buat draft dokumen | edit source code, pindah file | hapus folder, ubah file di luar workspace |
+| Terminal | `ls`, `pwd`, `rg`, `git status`, test/lint | install dependency, migration, restart service | `rm -rf`, reset git, force push |
+| Git | lihat diff/status/log | commit, push, buat branch | force push, rewrite history |
+| Browser | buka halaman, ambil data publik | login, isi form, submit data | transaksi, payment, ubah akun |
+| Email | baca email testing, buat draft | kirim email, arsip massal | hapus email, kirim ke banyak orang |
+| GitHub | baca issue/PR, buat draft issue | komentar PR, label issue, buka PR | merge PR, delete branch, release production |
+| Server VPS | cek status, baca log terbatas | restart service, update package | hapus data, ubah firewall tanpa review |
+| Database | baca schema, query read-only | migration, update data | drop table, truncate, delete massal |
+| 9Router | baca analytics, cek provider | ubah provider, ubah routing | hapus provider, expose key |
+| OpenClaw config | baca config, validasi config | ubah model/default agent | membagikan secret, membuka akses global |
+
+### Permission untuk lokal
+
+Untuk OpenClaw lokal tahap belajar:
+
+| Aksi | Status |
+|---|---|
+| Membaca folder project dummy | Boleh otomatis |
+| Membuat dokumentasi baru | Boleh jika diminta |
+| Mengedit source code | Harus konfirmasi |
+| Menjalankan test/lint | Boleh otomatis jika non-destruktif |
+| Install dependency | Harus konfirmasi |
+| Membaca home directory penuh | Hindari |
+| Menghapus file | Dilarang tanpa izin eksplisit |
+
+### Permission untuk VPS
+
+Untuk OpenClaw di VPS:
+
+| Aksi | Status |
+|---|---|
+| Cek uptime/disk/memory | Boleh otomatis |
+| Baca log maksimal 100-300 baris | Boleh otomatis |
+| Restart service | Harus konfirmasi |
+| Update package | Harus konfirmasi |
+| Ubah firewall | Harus konfirmasi |
+| Buka port publik | Harus konfirmasi kuat |
+| Hapus data/log/database | Dilarang tanpa izin eksplisit |
+| Deploy production | Harus approval manusia |
+
+### Permission untuk chat app
+
+Jika OpenClaw terhubung ke Telegram, Discord, atau Slack:
+
+| Aksi | Status |
+|---|---|
+| Membaca pesan channel khusus bot | Boleh otomatis |
+| Menjawab di thread internal | Boleh jika channel memang untuk bot |
+| Mengirim DM ke user | Harus konfirmasi |
+| Mention banyak orang | Harus konfirmasi |
+| Mengirim file/log sensitif | Dilarang tanpa izin eksplisit |
+| Mengirim secret/API key | Dilarang |
+
+### Permission untuk email
+
+Email adalah area sensitif.
+
+| Aksi | Status |
+|---|---|
+| Membaca email testing | Boleh otomatis |
+| Membuat draft email | Boleh otomatis |
+| Mengirim email | Harus konfirmasi |
+| Forward email | Harus konfirmasi |
+| Menghapus email | Dilarang tanpa izin eksplisit |
+| Membaca email pribadi penuh | Hindari |
+
+### Prompt permission policy
+
+Masukkan aturan ini ke `TOOLS.md` atau prompt agent:
+
+```text
+Sebelum menjalankan aksi yang mengubah sistem, kamu harus meminta konfirmasi.
+
+Aksi yang wajib konfirmasi:
+- mengedit source code
+- install dependency
+- restart service
+- migration database
+- commit atau push git
+- mengirim email/pesan
+- mengubah firewall
+- membuka port publik
+- deploy
+
+Aksi yang dilarang tanpa izin eksplisit:
+- menghapus file/folder
+- reset git history
+- force push
+- drop/truncate database
+- membagikan API key/secret
+- melakukan transaksi/payment
+```
+
 ## Checklist Keamanan
 
 Karena OpenClaw bisa menjalankan aksi nyata, keamanan harus dianggap serius.
