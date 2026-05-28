@@ -32,18 +32,54 @@ const { title, description = "Personal developer documentation hub" } = Astro.pr
       const backTop = document.getElementById("backTop");
       const menuButton = document.getElementById("mobileMenuButton");
       const sidebar = document.getElementById("docsSidebar");
+      const mainScroller = document.querySelector(".docs-main");
+      const lockedScrollers = [sidebar, mainScroller].filter(Boolean);
 
-      function updateReadingProgress() {
-        const max = document.documentElement.scrollHeight - window.innerHeight;
-        const value = max > 0 ? (window.scrollY / max) * 100 : 0;
-        if (progress) progress.style.width = `${value}%`;
-        backTop?.classList.toggle("is-visible", window.scrollY > 520);
+      function lockOverscroll(scroller) {
+        let touchStartY = 0;
+
+        function shouldBlock(deltaY) {
+          const atTop = scroller.scrollTop <= 0;
+          const atBottom = Math.ceil(scroller.scrollTop + scroller.clientHeight) >= scroller.scrollHeight;
+          return (atTop && deltaY < 0) || (atBottom && deltaY > 0);
+        }
+
+        scroller.addEventListener("wheel", (event) => {
+          if (shouldBlock(event.deltaY)) event.preventDefault();
+        }, { passive: false });
+
+        scroller.addEventListener("touchstart", (event) => {
+          touchStartY = event.touches[0]?.clientY ?? 0;
+        }, { passive: true });
+
+        scroller.addEventListener("touchmove", (event) => {
+          const currentY = event.touches[0]?.clientY ?? touchStartY;
+          const deltaY = touchStartY - currentY;
+          if (shouldBlock(deltaY)) event.preventDefault();
+        }, { passive: false });
       }
 
-      window.addEventListener("scroll", updateReadingProgress, { passive: true });
+      lockedScrollers.forEach(lockOverscroll);
+
+      function updateReadingProgress() {
+        const scrollTop = mainScroller ? mainScroller.scrollTop : window.scrollY;
+        const scrollHeight = mainScroller ? mainScroller.scrollHeight : document.documentElement.scrollHeight;
+        const viewportHeight = mainScroller ? mainScroller.clientHeight : window.innerHeight;
+        const max = scrollHeight - viewportHeight;
+        const value = max > 0 ? (scrollTop / max) * 100 : 0;
+        if (progress) progress.style.width = `${value}%`;
+        backTop?.classList.toggle("is-visible", scrollTop > 520);
+      }
+
+      (mainScroller ?? window).addEventListener("scroll", updateReadingProgress, { passive: true });
       updateReadingProgress();
 
       backTop?.addEventListener("click", () => {
+        if (mainScroller) {
+          mainScroller.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
