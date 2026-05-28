@@ -615,3 +615,289 @@ sh create.sh nama-module
 - Untuk flow submit penting seperti pendaftaran, pembayaran, atau pesanan, tampilkan dialog konfirmasi sebelum submit.
 - Untuk bottom sheet, hindari fixed height; gunakan constraints dan aksi utama fixed di bawah.
 
+
+
+---
+
+## Rencana Fitur Berikutnya
+
+Bagian ini adalah catatan backlog agar requirement fitur berikutnya tidak tercecer. Status: rencana/PRD awal, belum menjadi konfirmasi implementasi final.
+
+### Jemaah Premium Subscription - MSP
+
+Referensi internal:
+
+- Module: MSP.
+- Item List No. 18.
+- Overview MSP Summary Google Sheet.
+
+Overview fitur:
+
+- Tambahkan row menu baru di `ProfileView`: **Jemaah Premium**.
+- Jemaah Premium akan menjadi dasar formulasi scoring leaderboard berbasis komunitas, contoh tambahan poin `+5`.
+- Halaman Jemaah Premium menampilkan pilihan kategori Digital Card: Silver, Gold/Bold, dan Platinum.
+- Setiap card memiliki harga, deskripsi, gambar, benefit, total user subscribe, dan total amount terkumpul.
+- Contoh pricing awal:
+  - Silver: Rp99.000 per bulan.
+  - Gold/Bold: Rp199.000 per bulan.
+  - Platinum/Premium: Rp399.000 per bulan.
+- Pricing harus dinamis dan bisa diatur dari Panel Admin melalui mastering data Digital Card / Jemaah Premium Package.
+- Model pembayaran mirip Donasi Otomatis: recurring debit dari saldo MSPay Wallet.
+- Jika user unsubscribe, saldo MSPay Wallet tidak terpotong pada periode berikutnya.
+- Jika saldo kurang, kirim notifikasi email, mirip logic Donasi Otomatis.
+- Setelah subscribe, user mendapatkan kartu e-money fisik yang sudah include saldo dan dikirim via ekspedisi.
+- Desain kartu fisik/e-money disiapkan oleh Hawnan Team.
+- Benefit per card hanya berupa informasi di aplikasi. Action fulfillment benefit dilakukan offline oleh Hawnan Team dan tidak termasuk sistem aplikasi.
+- User bisa upgrade atau downgrade berdasarkan level digital card, contoh Silver100, Gold200, Premium300.
+
+Contoh benefit Silver Digital Card:
+
+- Akses live streaming.
+- Akses kajian apps.
+- Akses eksklusif webinar.
+- Event tahunan offline.
+- Terdaftar sebagai orang tua asuh.
+- Terdaftar sebagai pendukung penghafal Al Quran.
+
+Kebutuhan Panel Admin:
+
+- Mastering package/card Jemaah Premium.
+- Field card: title, description, image, list of benefit, price, counter total subscriber, total amount collected.
+- Riwayat subscription.
+- Reporting subscription dan amount.
+- Menu Pengiriman Kartu untuk pencatatan pengiriman kartu fisik/e-money.
+
+Catatan implementasi mobile:
+
+- Tambahkan menu di Profile.
+- Tambahkan halaman list package/card.
+- Tambahkan flow subscribe, unsubscribe, upgrade, dan downgrade.
+- Integrasi dengan wallet/MSPay dan scheduler recurring billing.
+- Tambahkan history subscription.
+- Pastikan flow submit subscription menampilkan dialog konfirmasi sebelum proses pembayaran.
+
+### Jemaah Check-in On Site
+
+Overview fitur:
+
+- User melakukan check-in on site dengan scan QR Code dinamis.
+- Saat scan, tampilkan 2 checkbox:
+  - Sholat.
+  - Visit.
+- User boleh memilih salah satu atau keduanya.
+- Check-in dapat menjadi bagian dari scoring komunitas/BIPX pada fase berikutnya.
+
+Kebutuhan awal:
+
+- Dynamic QR source dari backend/panel.
+- Endpoint submit check-in dengan pilihan aktivitas.
+- Riwayat check-in user dan komunitas jika diperlukan.
+- Validasi anti duplikasi berdasarkan event/lokasi/waktu sesuai aturan backend.
+
+### Community Screen Enhancement
+
+Tambahan flow di screen komunitas:
+
+- Tampilkan list top 3 komunitas saya.
+- Di kanan atas section komunitas saya, tambahkan tombol **Lihat Semua**.
+- Tambahkan widget **Challenge Komunitas**:
+  - Slider horizontal.
+  - Menampilkan image, title, dan date creation.
+  - Ambil top 10 challenge.
+  - Tambahkan tombol **Lihat Semua** untuk seluruh challenge komunitas yang user ikuti atau tergabung di aplikasi.
+- Tambahkan **News Community** di bawah widget Challenge:
+  - Bisa circle item atau square item.
+  - Slider horizontal.
+  - Item bisa diklik masuk ke halaman detail news by community.
+
+Logic Challenge Komunitas:
+
+- Challenge dibuat dari Panel Admin atau Panel Komunitas.
+- Contoh challenge: Puasa Senin-Kamis selama 90 hari dengan reward 500 poin.
+- Challenge punya durasi, poin, detail item, dan status publish.
+- Satu user hanya boleh mengikuti 1 challenge aktif dalam satu waktu.
+- Jika user ingin join challenge lain, current challenge harus dicancel dulu atau diselesaikan sesuai durasi.
+- Poin challenge diberikan harian berdasarkan cut-off UTC 23:59 selama challenge tidak dicancel.
+- Poin masuk ke formulasi BIPX/community scoring.
+- User hanya mendapatkan poin jika sudah join challenge dan tergabung dengan komunitas terkait.
+
+Kebutuhan backend/panel:
+
+- CRUD Challenge.
+- Publish challenge ke community page.
+- Join/cancel challenge.
+- Daily point calculation dengan cut-off UTC 23:59.
+- Reporting participant, progress, point, dan status.
+- CRUD News Community dan detail news.
+
+### Al Quran - Pembelajaran LMS Phase 2 MSP
+
+Referensi internal:
+
+- Item List No. 10.
+- Overview Phase 2 MSP Summary Google Sheet.
+- Integrasi Third Party SIDAQ/Qaraa.
+
+Overview:
+
+- Pembelajaran Al Quran online terintegrasi dengan API Third Party SIDAQ.
+- Flow UI dan logic mengikuti aplikasi SIDAQ mobile dan desain Figma yang akan disiapkan.
+- Ada 2 kategori utama:
+  - Murajaah.
+  - Setor Ayat.
+- Ada module class:
+  - Hijaiyah.
+  - Tahsin.
+  - Tajwid.
+  - Ujian Kelulusan Akhir.
+- Setiap module class memiliki submodule/Bab/Materi.
+- Setiap Bab memiliki submateri.
+- Module, Bab, dan materi harus dikerjakan berurutan. User tidak boleh lompat materi.
+- Sertifikat diterbitkan per module class berdasarkan Uji Pemahaman/Evaluasi.
+- Setelah semua module class selesai dan sertifikat per module terbit, user dinyatakan lulus keseluruhan dan mendapatkan sertifikat akhir online.
+
+Verifikasi pembelajaran:
+
+- Murajaah: check/verifikasi setor ayat dan penilaian kelulusan audio diperiksa oleh AI melalui API integrasi.
+- Setor Ayat: check/verifikasi setor ayat dan penilaian kelulusan audio diperiksa oleh Ustad/Ustadzah melalui API integrasi.
+- Ada ujian drawing, audio/voice, dan multiple choice sesuai API SIDAQ.
+- Hasil koreksi Ustad/Ustadzah dapat diterima via callback dari SIDAQ.
+- Notifikasi hasil koreksi masuk ke notification list aplikasi MSP.
+
+Membership dan package:
+
+- Registrasi module Pembelajaran bisa berbayar, free, atau free plus donasi.
+- Membership eksklusif untuk aplikasi MSP dan terpisah dari database API SIDAQ.
+- Data user yang dikirim ke SIDAQ: email, nama, phone number, dan payload lain sesuai API.
+- Sync user MSP ke SIDAQ Core: signup/signin ke SIDAQ Core dari aplikasi MSP.
+- Jika aplikasi MSP logout, user juga logout dari SIDAQ Core.
+- Ada flag di MSP untuk menandai user sudah signup/signin ke SIDAQ Core.
+- Package disediakan oleh SIDAQ, pricing dapat disesuaikan dari Panel Admin MSP.
+- Tipe membership:
+  - Individu / Pro.
+  - Family.
+- Durasi subscription awal:
+  - 1 bulan / 30 hari.
+  - 6 bulan / 180 hari.
+  - 12 bulan / 365 hari.
+- Pricing awal family dapat disamakan dengan harga SIDAQ app ditambah 5%, lalu bisa diupdate dari Panel Admin.
+- Ada Harga Pokok dari SIDAQ dan komisi/fee MSP yang perlu dibahas lanjutan.
+
+Payment dan subscription:
+
+- Payment menggunakan channel core system Hawnan/MSP:
+  - MSPay Wallet.
+  - Online Payment.
+  - VA.
+  - QRIS.
+  - Channel tersedia lain seperti iPayMu/Xendit.
+- SIDAQ menyiapkan API topup balance MSP.
+- Saldo balance MSP di SIDAQ memiliki threshold minimum Rp1.000.000.
+- Jika saldo MSP kurang dari threshold, kirim notifikasi email.
+- User bayar di PG/MSPay MSP, lalu MSP push purchase ke API SIDAQ untuk memotong balance MSP di SIDAQ.
+- Data purchase ke SIDAQ membawa id paket, tipe, noreff, iduser, username, dan payload lain sesuai API.
+- Jika pembayaran user berhasil tetapi push API SIDAQ gagal:
+  - Retry maksimal 2 kali.
+  - Interval retry 1 menit.
+  - Status paket user di aplikasi: sedang diproses / menunggu aktivasi.
+  - Jika tetap gagal, perlu retry manual dari Panel Admin.
+  - Selama belum berhasil, paket belum aktif.
+- Jika payment gagal:
+  - User mendapat feedback pembayaran gagal.
+  - Paket tidak aktif dan tidak muncul sebagai paket berhasil dibeli.
+- Jika payment gateway pending:
+  - Paket belum aktif.
+  - User mendapat feedback proses pembayaran sedang berjalan.
+  - Setelah callback PG sukses, MSP push API SIDAQ, lalu paket aktif jika push berhasil.
+- Notifikasi ke user terkait potongan saldo langganan di-handle oleh MSP.
+- Jika user unsubscribe:
+  - Cancel subscription di MSP.
+  - Push cancel subscription ke API SIDAQ dengan noreff, iduser, username.
+  - Due date mengikuti tanggal pembelian dan durasi harian H-1 di sisi MSP.
+- Upgrade paket:
+  - User bisa upgrade durasi, contoh dari 1 bulan ke 6 bulan.
+  - Durasi baru ditambahkan ke sisa periode, contoh total menjadi 7 bulan.
+  - Opsi downgrade tidak ada selama paket aktif.
+  - Setelah periode selesai, user dapat beli paket durasi lebih rendah.
+
+Cut-off subscription:
+
+- MSP melakukan recurring billing berdasarkan tanggal beli.
+- Durasi dihitung harian: 30, 180, atau 365 hari.
+- Cut-off MSP di hari H pukul 00:00 atau waktu lain yang ditentukan MSP.
+- SIDAQ melakukan cut-off H+1, waktu disesuaikan oleh MSP/SIDAQ.
+
+Family Package Subscription:
+
+- User dapat membeli paket Family dengan pricing berbeda dari Individu/Pro.
+- Family memiliki maksimal 5 seat anak + 1 orang tua.
+- Orang tua dapat add/remove anak selama seat tersedia.
+- Orang tua dapat menunjuk 1 atau 2 anak sebagai admin jika API mendukung.
+- Admin family punya privilege menambahkan dan menghapus user biasa sesuai seat tersedia.
+- Aplikasi generate invitation link untuk anak.
+- Link dapat dishare via WhatsApp, email, dan platform lain.
+- Saat link diklik, deep link membuka aplikasi MSP dan menampilkan confirmation layout seperti SIDAQ app.
+- Setelah invitation dikonfirmasi, anak mendapat paket Family.
+- Jika anak sudah punya paket Pro, aplikasi akan switch/ganti akses ke paket Family atau menampilkan Pro + Family sesuai aturan final API.
+- Orang tua mendapat fitur monitoring dan kontrol anak sesuai API SIDAQ:
+  - Progress materi.
+  - Status kelulusan.
+  - Sertifikat.
+  - Aktivitas pembelajaran.
+- Jika orang tua cancel subscription atau subscription selesai:
+  - Seluruh circle/family nonaktif.
+  - Akses module anak terkunci.
+  - Semua anak/circle otomatis diremove sesuai aturan API.
+
+Sertifikat:
+
+- Sertifikat didapatkan setelah lulus seluruh materi per Bab dan kategori, atau setelah lulus Sertifikat Akhir.
+- Sertifikat berupa PDF.
+- User dapat view di aplikasi, share, atau print sendiri.
+- Sertifikat resmi dari lembaga pendidikan SIDAQ, powered by SIDAQ.
+- Template sertifikat menyesuaikan template MSP.
+
+Goal:
+
+- User MSP mendapatkan pembelajaran Al Quran online.
+- Ada 2 metode pembelajaran: Murajaah by AI dan Setor Ayat by Ustad/Ustadzah.
+- Pembelajaran Bab harus sequential dari awal sampai akhir dan harus lulus sebelum lanjut.
+- User mendapatkan sertifikat online resmi yang bisa dicetak.
+- Membership memiliki tipe Individu dan Family.
+- Family memiliki maksimal 5 seat anak dan fitur monitoring/kontrol anak.
+- Panel Admin memiliki menu Pembelajaran untuk package/pricing, membership, transaksi, ujian, sertifikat, reporting, dan user activation.
+- SuperAdmin dapat mengaktifkan atau menonaktifkan user tertentu.
+
+Success metric:
+
+- User MSP dapat menggunakan Module Pembelajaran yang flow-nya sama dengan aplikasi SIDAQ.
+- Kategori Murajaah dan Setor Ayat berjalan dengan verifikasi sesuai role: AI dan Ustad/Ustadzah.
+- Tersedia minimal 3 Bab plus Sertifikat untuk Murajaah dan Setor Ayat.
+- Membership terbagi Individu/Pro dan Family.
+- Pricing package dapat diupdate via Panel Admin.
+- User hanya dapat mengakses module jika subscription aktif.
+- Jika subscription tidak aktif, seluruh akses module terkunci.
+- Panel Admin memiliki submenu Package/Pricing, Membership, Transaction/Payment, Ujian & Sertifikat, dan Reporting.
+
+Requirement awal:
+
+| Area | User Story / Requirement | Acceptance Criteria | Priority | Note |
+| --- | --- | --- | --- | --- |
+| UI/UX Figma | Implementasi UI Pembelajaran mengikuti flow aplikasi SIDAQ. | Flow mobile sesuai Figma dan logic SIDAQ. | 1 | Sesuaikan dengan aplikasi SIDAQ. |
+| Backend Integrasi SIDAQ | MSP integrasi dengan API SIDAQ untuk membership, payment, module, progress, monitoring, dan certificate. | User MSP bisa signup/signin SIDAQ, beli package, akses module, submit audio, dan menerima status dari callback. | 2 | API collection dari SIDAQ/Qaraa. |
+| Membership & Package | Tersedia package Individu/Pro dan Family dengan durasi 30/180/365 hari. | Pricing bisa dikonfigurasi, callback package tersedia, subscription aktif sesuai periode. | 2 | Perlu mapping payload SIDAQ. |
+| Payment | Payment MSP berhasil lalu push purchase ke API SIDAQ. | Success, pending, failed, retry, dan manual retry tertangani. | 2 | Perlu idempotency dan noreff yang aman. |
+| Learning | Module Murajaah dan Setor Ayat berjalan sequential. | Materi berikutnya terkunci sampai materi sebelumnya lulus. | 3 | Murajaah by AI, Setor Ayat by Ustad/Ustadzah. |
+| Family | Orang tua bisa mengelola anak dan monitoring progress. | Invitation link, add/remove, seat limit, dan lock access berjalan. | 3 | Butuh deep linking. |
+| Mobile App | Mobile MSP menyesuaikan flow aplikasi SIDAQ. | UI dan navigasi sesuai Figma/SIDAQ. | 3 | Integrasi penuh API SIDAQ. |
+| Panel Admin | Tambahkan menu Pembelajaran. | Ada Package/Pricing, Membership, Transaction/Payment, Ujian & Sertifikat, Reporting, retry action, active/inactive user. | 4 | Menyesuaikan kebutuhan backend dan mobile. |
+
+Open questions / perlu dipastikan:
+
+- Nama final tier Jemaah Premium: Bold atau Gold.
+- Apakah upgrade/downgrade Jemaah Premium berlaku prorate atau mulai periode berikutnya.
+- Detail payload API SIDAQ untuk signup/signin, purchase package, cancel subscription, callback correction, certificate, dan family invitation.
+- Skema idempotency untuk retry push purchase ke SIDAQ.
+- Waktu final cut-off subscription MSP dan SIDAQ.
+- Bentuk final scoring BIPX/community leaderboard.
+- Flow admin pengiriman kartu e-money: status, ekspedisi, resi, dan notifikasi user.
