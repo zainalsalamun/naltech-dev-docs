@@ -1,0 +1,16 @@
+{
+  "name": "fitaru",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Fitaru monorepo for Flutter mobile app, Next.js admin CMS, and Supabase backend.",
+  "scripts": {
+    "docs": "echo \"Open docs/README.md\"",
+    "admin:dev": "npm --prefix admin run dev",
+    "admin:build": "npm --prefix admin run build",
+    "admin:lint": "npm --prefix admin run lint"
+  },
+  "workspaces": [
+    "admin",
+    "packages/*"
+  ]
+}
